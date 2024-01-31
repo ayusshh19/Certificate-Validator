@@ -8,7 +8,8 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import { NavLink } from "react-router-dom";
-import { Router, Route } from "react-router-dom";
+import Divider from "@mui/material/Divider";
+
 import "./Dashboard.css";
 
 const Dashboard = () => {
@@ -81,6 +82,15 @@ const Dashboard = () => {
               >
                 <p className="title">{year.year}</p>
               </AccordionSummary>
+              <Divider
+                variant="middle"
+                style={{
+                  backgroundColor: "#000000",
+                  opacity: "0.1",
+                  marginBottom: "6px",
+                }}
+              />
+
               <AccordionDetails>
                 <div className="accordion-details">
                   <div className="row ">
