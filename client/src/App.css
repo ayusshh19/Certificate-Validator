@@ -1,0 +1,8 @@
+.mainscreen .sidebar {
+    background-color: #f8f9fa;
+    border-right: 1px solid #e7e7e7;
+    height: 100%;
+    z-index: 1;
+    overflow-x: hidden;
+    padding-top: 20px;
+}

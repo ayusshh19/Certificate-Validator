@@ -1,0 +1,26 @@
+.navs a {
+    display: flex;
+    padding: 12px 20px;
+    align-items: center;
+    justify-content: start;
+    text-transform: capitalize;
+    font-weight: 600;
+    min-height: fit-content;
+}
+
+.navs a.active {
+
+    background-color: rgba(25, 118, 210, 0.06);
+}
+
+.MuiButtonBase-root.Mui-selected {
+    background-color: rgba(25, 118, 210, 0.06);
+}
+
+.navs a:hover {
+    background-color: rgba(25, 118, 210, 0.03);
+}
+
+.navs .MuiTabs-indicator {
+    width: 3px;
+}
