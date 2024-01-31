@@ -4,14 +4,36 @@ import Button from "@mui/material/Button";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { NavLink } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const columns = [
   { field: "serialNumber", headerName: "Serial No.", width: 100 },
   { field: "date", headerName: "Date", width: 130, sortable: false },
-  { field: "name", headerName: "Name", width: 130 },
-  { field: "position", headerName: "Position", width: 130, type: "number" },
+  { field: "name", headerName: "Name", width: 250 },
+  { field: "position", headerName: "Position", width: 100, type: "number" },
   { field: "id", headerName: "Certificate ID", width: 200, sortable: false },
+  {
+    field: "actions",
+    headerName: "Actions",
+    sortable: false,
+    filterable: false,
+    width: 120,
+    renderCell: (params) => (
+      <IconButton
+        aria-label="delete"
+        color="error"
+        onClick={() => handleDelete(params.row.id)}
+      >
+        <DeleteIcon />
+      </IconButton>
+    ),
+  },
 ];
+
+const handleDelete = (certificateId) => {
+  alert(`Deleting certificate with ID: ${certificateId}`);
+};
 
 const generateRowsWithSerialNumber = (rows) => {
   return rows.map((row, index) => ({
@@ -150,7 +172,7 @@ const CertificatesList = () => {
 
   return (
     <div>
-      <div className="d-flex">
+      <div className="d-flex align-items-center">
         <NavLink to="/">
           <Button
             variant="outlined"
@@ -159,7 +181,7 @@ const CertificatesList = () => {
               width: "40px",
               height: "40px",
               minWidth: "40px",
-              marginRight: "10px",
+              marginRight: "20px",
               padding: "0",
               display: "flex",
               justifyContent: "center",
@@ -175,6 +197,9 @@ const CertificatesList = () => {
       <div className="container-fluid mt-4">
         <div style={{ height: "80vh", width: "100%" }}>
           <DataGrid
+            style={{
+              borderRadius: "18px",
+            }}
             rows={rowsWithSerialNumber}
             columns={columns}
             initialState={{
@@ -183,7 +208,6 @@ const CertificatesList = () => {
               },
             }}
             pageSizeOptions={[10, 20]}
-            checkboxSelection
           />
         </div>
       </div>

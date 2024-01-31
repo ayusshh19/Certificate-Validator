@@ -5,6 +5,8 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FolderRoundedIcon from "@mui/icons-material/FolderRounded";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Button from "@mui/material/Button";
+import AddIcon from "@mui/icons-material/Add";
 import { NavLink } from "react-router-dom";
 import { Router, Route } from "react-router-dom";
 import "./Dashboard.css";
@@ -51,7 +53,17 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard">
-      <h2>Dashboard</h2>
+      <div className="d-flex align-items-center justify-content-between">
+        <h2>Dashboard</h2>
+        <Button
+          disableElevation
+          variant="contained"
+          startIcon={<AddIcon />}
+          style={{ borderRadius: "10px", textTransform: "capitalize" }}
+        >
+          Add Event
+        </Button>
+      </div>
       <div className="mt-3">
         {data?.map((year, index) => {
           return (
