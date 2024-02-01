@@ -1,0 +1,25 @@
+{
+  "name": "certificate-validator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CSI-CATT-DMCE/Certificate-Validator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CSI-CATT-DMCE/Certificate-Validator/issues"
+  },
+  "homepage": "https://github.com/CSI-CATT-DMCE/Certificate-Validator#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1"
+  }
+}
