@@ -80,13 +80,14 @@ const Dashboard = () => {
     setOpen(false);
   };
 
-  const handleDelete = (e, eventId) => {
+  const handleDelete = async (e, eventId) => {
     e.preventDefault();
     e.stopPropagation();
+
     if (window.confirm("Are you sure you want to delete this event?")) {
       try {
-        axios.delete(`/api/event/delete/${eventId}`);
-        alert("Event Deleted");
+        await axios.delete(`/api/event/delete/${eventId}`);
+        // Call the refreshFlag function if it's defined
         refreshFlag();
       } catch (err) {
         console.log(err);
