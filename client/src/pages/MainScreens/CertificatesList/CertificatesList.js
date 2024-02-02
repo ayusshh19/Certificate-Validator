@@ -7,6 +7,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
+import { SERVER_URL } from "../../../config";
 
 const columns = [
   { field: "serialNumber", headerName: "Serial No.", width: 100 },
@@ -35,7 +36,7 @@ const columns = [
 const handleDelete = async (certificateId) => {
   try {
     const { data } = await axios.delete(
-      `/api/certificate/delete/${certificateId}`
+      `${SERVER_URL}/api/certificate/delete/${certificateId}`
     );
     console.log(data);
   } catch (err) {
@@ -62,13 +63,12 @@ const CertificatesList = () => {
     (async () => {
       try {
         const { data } = await axios.get(
-          `/api/certificate/fetch/event/${event_id}`,
+          `${SERVER_URL}/api/certificate/fetch/event/${event_id}`,
           {
             signal: controller.signal,
           }
         );
         setCertificates(data);
-        console.log(data);
       } catch (err) {
         if (err.name === "CanceledError") return;
         console.log(err);

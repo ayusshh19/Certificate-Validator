@@ -87,7 +87,10 @@ const Dashboard = () => {
       return;
     }
     try {
-      const { data } = await axios.post("/api/event/register", register);
+      const { data } = await axios.post(
+        `${SERVER_URL}/api/event/register`,
+        register
+      );
       console.log(data);
       handleClose();
     } catch (err) {
