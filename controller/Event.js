@@ -25,6 +25,16 @@ const Delete = async (req, res, next) => {
 
 const Fetch = async (req, res, next) => {
   try {
+    const { event_id } = req.params;
+    const event = await EventSchema.findById(event_id).lean();
+    res.json(event);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const FetchYear = async (req, res, next) => {
+  try {
     const events = await EventSchema.aggregate([
       {
         $group: {
@@ -74,6 +84,7 @@ module.exports = {
   Register,
   Delete,
   Fetch,
+  FetchYear,
   FetchAll,
   Update,
 };
