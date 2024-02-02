@@ -32,23 +32,29 @@ const style = {
 const Dashboard = () => {
   const [events, setEvents] = useState([]);
 
-  const [open, setOpen] = React.useState(false);
-  const [eventName, setEventName] = React.useState("");
-  const [selectedYear, setSelectedYear] = React.useState(
-    new Date().getFullYear()
-  );
-  const [eventNameError, setEventNameError] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [register, setRegister] = useState({
+    name: "",
+    year: new Date().getFullYear(),
+    nameError: false,
+  });
 
   useEffect(() => {
+    const controller = new AbortController();
+    console.log("fetching events");
     (async () => {
       try {
-        const { data } = await axios.get("/api/event/fetch");
+        const { data } = await axios.get("/api/event/fetch", {
+          signal: controller.signal,
+        });
         setEvents(data);
       } catch (err) {
+        if (err.name === "CanceledError") return;
         console.log(err);
-        alert(err.response.data.error || err.message || err);
+        alert(err.response?.data.error || err.message || err);
       }
     })();
+    return () => controller.abort();
   }, []);
 
   const generateYearOptions = () => {
@@ -61,12 +67,11 @@ const Dashboard = () => {
   };
 
   const handleYearChange = (event) => {
-    setSelectedYear(event.target.value);
+    setRegister({ ...register, year: event.target.value });
   };
 
   const handleEventNameChange = (event) => {
-    setEventName(event.target.value);
-    setEventNameError(false);
+    setRegister({ ...register, name: event.target.value, nameError: false });
   };
 
   const handleMoreIconClick = (e) => {
@@ -75,22 +80,27 @@ const Dashboard = () => {
     alert("MoreIcon Clicked!");
   };
 
-  const handleAddEvent = () => {
-    if (!eventName.trim()) {
-      setEventNameError(true);
+  const handleAddEvent = async () => {
+    if (!register.name.trim()) {
+      setRegister({ ...register, nameError: true });
       return;
     }
-
-    console.log("Selected Year:", selectedYear);
-    console.log("Event Name:", eventName);
-
-    handleClose();
+    try {
+      const { data } = await axios.post("/api/event/register", register);
+      console.log(data);
+      handleClose();
+    } catch (err) {
+      console.log(err);
+      alert(err.response?.data.error || err.message || err);
+    }
   };
 
   const handleClose = () => {
-    setEventName("");
-    setEventNameError(false);
-    setSelectedYear(new Date().getFullYear());
+    setRegister({
+      name: "",
+      year: new Date().getFullYear(),
+      nameError: false,
+    });
     setOpen(false);
   };
 
@@ -104,7 +114,10 @@ const Dashboard = () => {
           startIcon={<AddIcon />}
           style={{ borderRadius: "10px", textTransform: "capitalize" }}
           onClick={() => {
-            setEventName(""); // Reset event name when opening the modal
+            setRegister({
+              ...register,
+              name: "",
+            });
             setOpen(true);
           }}
         >
@@ -186,10 +199,10 @@ const Dashboard = () => {
               label="Event Name"
               variant="standard"
               sx={{ width: "100%" }}
-              value={eventName}
+              value={register.name}
               onChange={handleEventNameChange}
-              error={eventNameError}
-              helperText={eventNameError ? "Event Name is required" : ""}
+              error={register.nameError}
+              helperText={register.nameError ? "Event Name is required" : ""}
             />
           </FormControl>
           <FormControl
@@ -201,7 +214,7 @@ const Dashboard = () => {
             <Select
               labelId="demo-simple-select-standard-label"
               id="demo-simple-select-standard"
-              value={selectedYear}
+              value={register.year}
               onChange={handleYearChange}
               label="Year"
             >
