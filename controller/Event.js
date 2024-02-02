@@ -49,6 +49,17 @@ const Fetch = async (req, res, next) => {
   }
 };
 
+const FetchAll = async (req, res, next) => {
+  try {
+    const events = await EventSchema.find()
+      .sort({ year: -1 })
+      .select(["_id", "name"]);
+    res.json(events);
+  } catch (err) {
+    next(err);
+  }
+};
+
 const Update = async (req, res, next) => {
   try {
     const { event_id } = req.params;
@@ -63,5 +74,6 @@ module.exports = {
   Register,
   Delete,
   Fetch,
+  FetchAll,
   Update,
 };

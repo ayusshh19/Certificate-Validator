@@ -6,6 +6,8 @@ const {
   Register: RegisterEvent,
   Delete: DeleteEvent,
   Fetch: FetchEvent,
+  FetchYear: FetchYearEvent,
+  FetchAll: FetchAllEvent,
   Update: UpdateEvent,
 } = require("../controller/Event");
 
@@ -29,7 +31,16 @@ router.delete(
   DeleteEvent
 );
 
-router.get("/fetch", FetchEvent);
+router.get(
+  "/fetch/:event_id",
+  param("event_id").trim().notEmpty().withMessage("event id is required"),
+  fieldHandler,
+  FetchEvent
+);
+
+router.get("/fetch", FetchYearEvent);
+
+router.get("/fetch/all", FetchAllEvent);
 
 router.put(
   "/update/:event_id",
