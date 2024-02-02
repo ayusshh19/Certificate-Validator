@@ -6,7 +6,6 @@ const EventSchema = new Schema(
       type: String,
       trim: true,
       required: [true, "name is required"],
-      match: [/^[a-zA-Z ]+$/, (props) => `${props.value} is not a valid name`],
       lowercase: true,
     },
     year: {

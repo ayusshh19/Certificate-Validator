@@ -22,7 +22,7 @@ router.post(
   RegisterEvent
 );
 
-router.get(
+router.delete(
   "/delete/:event_id",
   param("event_id").trim().notEmpty().withMessage("event id is required"),
   fieldHandler,
@@ -31,7 +31,7 @@ router.get(
 
 router.get("/fetch", FetchEvent);
 
-router.get(
+router.put(
   "/update/:event_id",
   param("event_id").trim().notEmpty().withMessage("event id is required"),
   fieldHandler,

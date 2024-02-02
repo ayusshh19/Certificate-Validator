@@ -24,7 +24,7 @@ router.post(
   RegisterCertificate
 );
 
-router.get(
+router.delete(
   "/delete/:certificate_id",
   param("certificate_id")
     .trim()
@@ -41,7 +41,7 @@ router.get(
   FetchCertificate
 );
 
-router.get(
+router.put(
   "/update/:certificate_id",
   param("certificate_id")
     .trim()
