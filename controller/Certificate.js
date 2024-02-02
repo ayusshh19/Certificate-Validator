@@ -1,12 +1,22 @@
 const errorResponse = require("../utils/errorResponse");
 const EventSchema = require("../models/EventSchema");
 const CertificateSchema = require("../models/CertificateSchema");
+const ShortUniqueId = require("short-unique-id");
+
+const { randomUUID } = new ShortUniqueId({ length: 12 });
+
+const uidGenerator = async () => {
+  const uid = await randomUUID();
+  const certificate = await CertificateSchema.findOne({ uid });
+  return certificate ? uidGenerator() : uid;
+};
 
 const Register = async (req, res, next) => {
   try {
-    const { event_id, uid, name, position, date } = req.body;
+    const { event_id, name, position, date } = req.body;
     const event = await EventSchema.findById(event_id);
     if (!event) throw new errorResponse("event is not registered", 404);
+    const uid = await uidGenerator();
     const response = await CertificateSchema.create({
       event_id,
       uid,
@@ -32,6 +42,16 @@ const Delete = async (req, res, next) => {
 
 const Fetch = async (req, res, next) => {
   try {
+    const { certificate_id } = req.params;
+    const certificate = await CertificateSchema.findById(certificate_id).lean();
+    res.json(certificate);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const FetchEvent = async (req, res, next) => {
+  try {
     const { event_id } = req.params;
     const certificates = await CertificateSchema.find({ event_id }).lean();
     res.json(certificates);
@@ -50,9 +70,21 @@ const Update = async (req, res, next) => {
   }
 };
 
+const Verify = async (req, res, next) => {
+  try {
+    const { uid } = req.params;
+    const certificate = await CertificateSchema.findOne({ uid }).lean();
+    res.json(certificate);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   Register,
   Delete,
   Fetch,
+  FetchEvent,
   Update,
+  Verify,
 };

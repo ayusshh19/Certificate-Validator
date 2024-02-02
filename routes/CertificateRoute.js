@@ -6,7 +6,9 @@ const {
   Register: RegisterCertificate,
   Delete: DeleteCertificate,
   Fetch: FetchCertificate,
+  FetchEvent: FetchEventCertificate,
   Update: UpdateCertificate,
+  Verify: VerifyCertificate,
 } = require("../controller/Certificate");
 
 router.post(
@@ -35,10 +37,20 @@ router.delete(
 );
 
 router.get(
-  "/fetch/:event_id",
-  param("event_id").trim().notEmpty().withMessage("event id is required"),
+  "/fetch/:certificate_id",
+  param("certificate_id")
+    .trim()
+    .notEmpty()
+    .withMessage("certificate id is required"),
   fieldHandler,
   FetchCertificate
+);
+
+router.get(
+  "/fetch/event/:event_id",
+  param("event_id").trim().notEmpty().withMessage("event id is required"),
+  fieldHandler,
+  FetchEventCertificate
 );
 
 router.put(
@@ -49,6 +61,13 @@ router.put(
     .withMessage("certificate id is required"),
   fieldHandler,
   UpdateCertificate
+);
+
+router.get(
+  "/verify/:uid",
+  param("uid").trim().notEmpty().withMessage("uid is required"),
+  fieldHandler,
+  VerifyCertificate
 );
 
 module.exports = router;

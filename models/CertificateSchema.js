@@ -7,7 +7,7 @@ const CertificateSchema = new Schema(
       required: [true, "event id is required"],
     },
     uid: {
-      type: Schema.Types.ObjectId,
+      type: String,
       required: [true, "uid is required"],
       unique: true,
     },
