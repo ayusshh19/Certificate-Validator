@@ -53,7 +53,11 @@ const Fetch = async (req, res, next) => {
 const FetchEvent = async (req, res, next) => {
   try {
     const { event_id } = req.params;
-    const certificates = await CertificateSchema.find({ event_id }).lean();
+    const certificates = await CertificateSchema.find({ event_id })
+      .sort({
+        createdAt: -1,
+      })
+      .lean();
     res.json(certificates);
   } catch (err) {
     next(err);

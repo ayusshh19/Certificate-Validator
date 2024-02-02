@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -6,13 +6,14 @@ import { NavLink } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
 
 const columns = [
   { field: "serialNumber", headerName: "Serial No.", width: 100 },
   { field: "date", headerName: "Date", width: 130, sortable: false },
-  { field: "name", headerName: "Name", width: 250 },
-  { field: "position", headerName: "Position", width: 100, type: "number" },
-  { field: "id", headerName: "Certificate ID", width: 200, sortable: false },
+  { field: "name", headerName: "Name", width: 200 },
+  { field: "position", headerName: "Position", width: 100 },
+  { field: "uid", headerName: "Certificate ID", width: 200, sortable: false },
   {
     field: "actions",
     headerName: "Actions",
@@ -31,144 +32,53 @@ const columns = [
   },
 ];
 
-const handleDelete = (certificateId) => {
-  alert(`Deleting certificate with ID: ${certificateId}`);
+const handleDelete = async (certificateId) => {
+  try {
+    const { data } = await axios.delete(
+      `/api/certificate/delete/${certificateId}`
+    );
+    console.log(data);
+  } catch (err) {
+    console.log(err);
+    alert(err.response?.data.error || err.message || err);
+  }
 };
 
 const generateRowsWithSerialNumber = (rows) => {
   return rows.map((row, index) => ({
     ...row,
     serialNumber: index + 1,
+    id: row._id,
   }));
 };
 
-const rows = [
-  {
-    id: "213AWGDB13Z",
-    name: "John Mathew",
-    position: "1",
-    date: "20/01/2024",
-  },
-  {
-    id: "213AWG13AAZ",
-    name: "Karandeep",
-    position: "3",
-    date: "20/01/2024",
-  },
-  {
-    id: "213AWGDB1ZSS",
-    name: "Sudharma",
-    position: "2",
-    date: "20/01/2024",
-  },
-  {
-    id: "213AWGDBSS1Z",
-    name: "Jane Doe",
-    position: "4",
-    date: "20/01/2024",
-  },
-  {
-    id: "213AWGDB1ZO",
-    name: "Michael Smith",
-    position: "5",
-    date: "20/01/2024",
-  },
-  {
-    id: "987XYZ456",
-    name: "Alice Johnson",
-    position: "6",
-    date: "22/01/2024",
-  },
-  {
-    id: "456ABC789",
-    name: "Bob Williams",
-    position: "7",
-    date: "25/01/2024",
-  },
-  {
-    id: "123DEF987",
-    name: "Eva Davis",
-    position: "8",
-    date: "30/01/2024",
-  },
-  {
-    id: "XYZ789ABC",
-    name: "Tom Wilson",
-    position: "9",
-    date: "01/02/2024",
-  },
-  {
-    id: "789GHI123",
-    name: "Olivia Brown",
-    position: "10",
-    date: "05/02/2024",
-  },
-  // Additional 10 rows
-  {
-    id: "456JKL321",
-    name: "Chris Taylor",
-    position: "11",
-    date: "10/02/2024",
-  },
-  {
-    id: "321MNO654",
-    name: "Sophia Garcia",
-    position: "12",
-    date: "15/02/2024",
-  },
-  {
-    id: "654PQR987",
-    name: "Daniel Robinson",
-    position: "13",
-    date: "20/02/2024",
-  },
-  {
-    id: "987STU321",
-    name: "Emily White",
-    position: "14",
-    date: "25/02/2024",
-  },
-  {
-    id: "321UVW654",
-    name: "Isaac Hall",
-    position: "15",
-    date: "01/03/2024",
-  },
-  {
-    id: "654XYZ987",
-    name: "Grace Lewis",
-    position: "16",
-    date: "05/03/2024",
-  },
-  {
-    id: "987ABC321",
-    name: "Ryan Turner",
-    position: "17",
-    date: "10/03/2024",
-  },
-  {
-    id: "321DEF654",
-    name: "Mia Anderson",
-    position: "18",
-    date: "15/03/2024",
-  },
-  {
-    id: "654GHI987",
-    name: "Jake Miller",
-    position: "19",
-    date: "20/03/2024",
-  },
-  {
-    id: "987JKL321",
-    name: "Zoe Martinez",
-    position: "20",
-    date: "25/03/2024",
-  },
-];
-
 const CertificatesList = () => {
-  const { id } = useParams();
-  const rowsWithSerialNumber = generateRowsWithSerialNumber(rows);
+  const { event_id } = useParams();
+  const [certificates, setCertificates] = useState([]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    console.log("fetching certificates");
+    (async () => {
+      try {
+        const { data } = await axios.get(
+          `/api/certificate/fetch/event/${event_id}`,
+          {
+            signal: controller.signal,
+          }
+        );
+        setCertificates(data);
+        console.log(data);
+      } catch (err) {
+        if (err.name === "CanceledError") return;
+        console.log(err);
+        alert(err.response?.data.error || err.message || err);
+      }
+    })();
+    return () => controller.abort();
+  }, []);
+
+  const rowsWithSerialNumber = generateRowsWithSerialNumber(certificates);
 
   return (
     <div>
@@ -191,7 +101,7 @@ const CertificatesList = () => {
             <ChevronLeftIcon />
           </Button>
         </NavLink>
-        <h2>{id} Code-A-Thon</h2>
+        <h2>{event_id} Code-A-Thon</h2>
       </div>
 
       <div className="container-fluid mt-4">

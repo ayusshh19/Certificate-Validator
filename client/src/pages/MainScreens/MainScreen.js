@@ -21,7 +21,7 @@ const MainScreen = () => {
           >
             <Routes>
               <Route path="/*" element={<Dashboard />} />
-              <Route path="/:id" element={<CertificatesList />} />
+              <Route path="/:event_id" element={<CertificatesList />} />
               <Route
                 path="/generate-certificate"
                 element={<GenerateCertificate />}
