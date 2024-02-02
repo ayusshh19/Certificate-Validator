@@ -70,3 +70,10 @@
     color: black;
     font-size: 0.9rem;
 }
+
+.event-modal {
+    background-color: #fff;
+    padding: 1.4rem;
+    border-radius: 18px;
+    box-shadow: inset;
+}
