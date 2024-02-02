@@ -4,7 +4,9 @@ import "./index.css";
 import App from "./App";
 import StateProvider from "./context/StateContext";
 import axios from "axios";
-import { SERVER_URL } from "./config";
+
+// const SERVER_URL = "http://localhost:8000";
+const SERVER_URL = "https://certificate-validator-api.vercel.app";
 
 axios.defaults.baseURL = SERVER_URL;
 

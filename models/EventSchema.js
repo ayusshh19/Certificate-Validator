@@ -6,7 +6,6 @@ const EventSchema = new Schema(
       type: String,
       trim: true,
       required: [true, "name is required"],
-      lowercase: true,
     },
     year: {
       type: Number,
