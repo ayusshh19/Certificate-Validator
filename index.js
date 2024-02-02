@@ -8,7 +8,6 @@ const EventRoute = require("./routes/EventRoute");
 const CertificateRoute = require("./routes/CertificateRoute");
 
 const app = express();
-const port = process.env.PORT || 8000;
 
 app.use(express.json());
 app.use(cors());
@@ -19,4 +18,17 @@ app.use("/api/certificate", CertificateRoute);
 
 app.use(errorHandler);
 
-app.listen(port, () => console.log(`http://localhost:${port}`));
+async function startServer() {
+  try {
+    app.listen(8000, () => {
+      console.log("Server listening on port 8001");
+    });
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error);
+  }
+}
+
+// Call the async function to start the server
+startServer().catch((error) => {
+  console.error("Error starting the server:", error);
+});
