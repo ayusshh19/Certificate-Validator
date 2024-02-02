@@ -18,6 +18,10 @@ app.use("/api/certificate", CertificateRoute);
 
 app.use(errorHandler);
 
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
 async function startServer() {
   try {
     app.listen(8000, () => {

@@ -45,7 +45,7 @@ const handleDelete = async (certificateId) => {
 };
 
 const generateRowsWithSerialNumber = (rows) => {
-  return rows.map((row, index) => ({
+  return rows?.map((row, index) => ({
     ...row,
     serialNumber: index + 1,
     id: row._id,

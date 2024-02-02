@@ -17,6 +17,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import axios from "axios";
+import { SERVER_URL } from "../../../config";
 
 import "./Dashboard.css";
 
@@ -44,7 +45,7 @@ const Dashboard = () => {
     console.log("fetching events");
     (async () => {
       try {
-        const { data } = await axios.get("/api/event/fetch", {
+        const { data } = await axios.get(`${SERVER_URL}/api/event/fetch`, {
           signal: controller.signal,
         });
         setEvents(data);
@@ -153,7 +154,7 @@ const Dashboard = () => {
               <AccordionDetails>
                 <div className="accordion-details">
                   <div className="row ">
-                    {year.events.map((event) => {
+                    {year?.events?.map((event) => {
                       return (
                         <div
                           key={event._id}
@@ -218,7 +219,7 @@ const Dashboard = () => {
               onChange={handleYearChange}
               label="Year"
             >
-              {generateYearOptions().map((year) => (
+              {generateYearOptions()?.map((year) => (
                 <MenuItem key={year} value={year}>
                   {year}
                 </MenuItem>
