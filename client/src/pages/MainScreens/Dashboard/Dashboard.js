@@ -17,6 +17,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import axios from "axios";
+import { SERVER_URL } from "../../../config";
 
 import "./Dashboard.css";
 
@@ -44,7 +45,7 @@ const Dashboard = () => {
     console.log("fetching events");
     (async () => {
       try {
-        const { data } = await axios.get("/api/event/fetch", {
+        const { data } = await axios.get(`${SERVER_URL}/api/event/fetch`, {
           signal: controller.signal,
         });
         setEvents(data);
