@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -9,42 +9,24 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import { NavLink } from "react-router-dom";
 import Divider from "@mui/material/Divider";
+import axios from "axios";
 
 import "./Dashboard.css";
 
 const Dashboard = () => {
-  const data = [
-    {
-      year: 2024,
-      events: [
-        {
-          name: "Code-a-thon",
-          date: "2024-01-01",
-          id: "1",
-        },
-        {
-          name: "Technitude",
-          date: "2024-01-02",
-          id: "2",
-        },
-      ],
-    },
-    {
-      year: 2023,
-      events: [
-        {
-          name: "Event 1",
-          date: "2024-01-01",
-          id: "11",
-        },
-        {
-          name: "Event 2",
-          date: "2024-01-02",
-          id: "21",
-        },
-      ],
-    },
-  ];
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axios.get("/api/event/fetch");
+        setEvents(data);
+      } catch (err) {
+        console.log(err);
+        alert(err.response.data.error || err.message || err);
+      }
+    })();
+  }, []);
 
   const handleMoreIconClick = (e) => {
     e.preventDefault();
@@ -66,7 +48,7 @@ const Dashboard = () => {
         </Button>
       </div>
       <div className="mt-3">
-        {data?.map((year, index) => {
+        {events?.map((year, index) => {
           return (
             <Accordion
               key={index}
@@ -94,13 +76,13 @@ const Dashboard = () => {
               <AccordionDetails>
                 <div className="accordion-details">
                   <div className="row ">
-                    {year.events.map((event, eventIndex) => {
+                    {year.events.map((event) => {
                       return (
                         <div
-                          key={eventIndex}
+                          key={event._id}
                           className="accordion-details-item col-6 col-md-3 col-lg-2"
                         >
-                          <NavLink to={`/${event.id}`}>
+                          <NavLink to={`/${event._id}`}>
                             <div className="folder-cover">
                               <MoreVertIcon
                                 className="more-icon"
