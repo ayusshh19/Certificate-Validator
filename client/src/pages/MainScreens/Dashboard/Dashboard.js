@@ -33,7 +33,7 @@ const style = {
 };
 
 const Dashboard = () => {
-  const { events, generateYearOptions } = useContext(StateContext);
+  const { events, generateYearOptions, refreshFlag } = useContext(StateContext);
 
   const [open, setOpen] = useState(false);
   const [register, setRegister] = useState({
@@ -71,10 +71,28 @@ const Dashboard = () => {
     alert(`Edit Clicked for Event ID: ${eventId}`);
   };
 
+  const handleClose = () => {
+    setRegister({
+      name: "",
+      year: new Date().getFullYear(),
+      nameError: false,
+    });
+    setOpen(false);
+  };
+
   const handleDelete = (e, eventId) => {
     e.preventDefault();
     e.stopPropagation();
-    alert(`Delete Clicked for Event ID: ${eventId}`);
+    if (window.confirm("Are you sure you want to delete this event?")) {
+      try {
+        axios.delete(`/api/event/delete/${eventId}`);
+        alert("Event Deleted");
+        refreshFlag();
+      } catch (err) {
+        console.log(err);
+        alert(err.response?.data.error || err.message || err);
+      }
+    }
   };
 
   const handleAddEvent = async () => {
@@ -84,21 +102,12 @@ const Dashboard = () => {
     }
     try {
       const { data } = await axios.post("/api/event/register", register);
-      console.log(data);
+      refreshFlag();
       handleClose();
     } catch (err) {
       console.log(err);
       alert(err.response?.data.error || err.message || err);
     }
-  };
-
-  const handleClose = () => {
-    setRegister({
-      name: "",
-      year: new Date().getFullYear(),
-      nameError: false,
-    });
-    setOpen(false);
   };
 
   return (

@@ -8,6 +8,7 @@ const StateProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [alerts, setAlerts] = useState([]);
   const [events, setEvents] = useState([]);
+  const [fetchFlag, setFetchFlag] = useState(true);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -24,7 +25,7 @@ const StateProvider = ({ children }) => {
       }
     })();
     return () => controller.abort();
-  }, []);
+  }, [fetchFlag]);
 
   const generateYearOptions = () => {
     const currentYear = new Date().getFullYear();
@@ -33,6 +34,10 @@ const StateProvider = ({ children }) => {
       years.push(i);
     }
     return years;
+  };
+
+  const refreshFlag = () => {
+    setFetchFlag(!fetchFlag);
   };
 
   return (
@@ -46,6 +51,7 @@ const StateProvider = ({ children }) => {
         setAlerts,
         events,
         generateYearOptions,
+        refreshFlag,
       }}
     >
       {children}
