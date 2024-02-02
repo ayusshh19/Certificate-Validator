@@ -129,7 +129,7 @@ const GenerateCertificate = () => {
                 className="mt-3"
               >
                 <InputLabel id="demo-simple-select-standard-label">
-                  Year
+                  Event Year
                 </InputLabel>
                 <Select
                   labelId="demo-simple-select-standard-label"

@@ -18,6 +18,8 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import axios from "axios";
 import { StateContext } from "../../../context/StateContext";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import "./Dashboard.css";
 
@@ -39,6 +41,7 @@ const Dashboard = () => {
     year: new Date().getFullYear(),
     nameError: false,
   });
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   const handleYearChange = (event) => {
     setRegister({ ...register, year: event.target.value });
@@ -48,10 +51,30 @@ const Dashboard = () => {
     setRegister({ ...register, name: event.target.value, nameError: false });
   };
 
-  const handleMoreIconClick = (e) => {
+  const handleMoreIconMouseEnter = (id) => {
+    setSelectedEvent(id);
+  };
+
+  const handleMoreIconMouseLeave = () => {
+    setSelectedEvent(null);
+  };
+
+  const handleMoreIconClick = (e, eventId) => {
     e.preventDefault();
     e.stopPropagation();
-    alert("MoreIcon Clicked!");
+    setSelectedEvent(eventId);
+  };
+
+  const handleEditEvent = (e, eventId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    alert(`Edit Clicked for Event ID: ${eventId}`);
+  };
+
+  const handleDelete = (e, eventId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    alert(`Delete Clicked for Event ID: ${eventId}`);
   };
 
   const handleAddEvent = async () => {
@@ -99,64 +122,93 @@ const Dashboard = () => {
         </Button>
       </div>
       <div className="mt-3">
-        {events?.map((year, index) => {
-          return (
-            <Accordion
-              key={index}
-              defaultExpanded={index === 0}
-              style={{
-                boxShadow: "none",
-              }}
+        {events?.map((year, index) => (
+          <Accordion
+            key={index}
+            defaultExpanded={index === 0}
+            style={{
+              boxShadow: "none",
+            }}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`panel${index + 1}-content`}
+              id={`panel${index + 1}-header`}
             >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls={`panel${index + 1}-content`}
-                id={`panel${index + 1}-header`}
-              >
-                <p className="title">{year.year}</p>
-              </AccordionSummary>
-              <Divider
-                variant="middle"
-                style={{
-                  backgroundColor: "#000000",
-                  opacity: "0.1",
-                  marginBottom: "6px",
-                }}
-              />
+              <p className="title">{year.year}</p>
+            </AccordionSummary>
+            <Divider
+              variant="middle"
+              style={{
+                backgroundColor: "#000000",
+                opacity: "0.1",
+                marginBottom: "6px",
+              }}
+            />
 
-              <AccordionDetails>
-                <div className="accordion-details">
-                  <div className="row ">
-                    {year?.events?.map((event) => {
-                      return (
+            <AccordionDetails>
+              <div className="accordion-details">
+                <div className="row">
+                  {year?.events?.map((event) => (
+                    <div
+                      key={event._id}
+                      className="accordion-details-item col-6 col-md-3 col-lg-2"
+                    >
+                      <NavLink to={`/${event._id}`}>
                         <div
-                          key={event._id}
-                          className="accordion-details-item col-6 col-md-3 col-lg-2"
+                          className="folder-cover"
+                          onMouseLeave={handleMoreIconMouseLeave}
                         >
-                          <NavLink to={`/${event._id}`}>
-                            <div className="folder-cover">
-                              <MoreVertIcon
-                                className="more-icon"
-                                onClick={handleMoreIconClick}
-                              />
-                              <FolderRoundedIcon className="folder-icon" />
-                              <p className="accordion-details-item-title">
-                                {event.name}
-                              </p>
-                              {/* <p className="accordion-details-item-date">
-                                {event.date}
-                              </p> */}
+                          <MoreVertIcon
+                            className="more-icon"
+                            onClick={(e) => handleMoreIconClick(e, event._id)}
+                            onMouseEnter={() =>
+                              handleMoreIconMouseEnter(event._id)
+                            }
+                          />
+                          {selectedEvent === event._id && (
+                            <div
+                              className="acc-menu"
+                              onMouseLeave={handleMoreIconMouseLeave}
+                              onClick={(e) => handleEditEvent(e, event._id)}
+                            >
+                              <button className="d-flex align-items-center justify-content-center">
+                                Edit{" "}
+                                <EditIcon
+                                  style={{
+                                    fontSize: "0.8rem",
+                                    marginLeft: "4px",
+                                  }}
+                                />
+                              </button>
+                              <button
+                                className="d-flex align-items-center justify-content-center"
+                                onClick={(e) => handleDelete(e, event._id)}
+                              >
+                                Delete{" "}
+                                <DeleteIcon
+                                  style={{
+                                    fontSize: "0.8rem",
+                                    marginLeft: "4px",
+                                  }}
+                                />
+                              </button>
                             </div>
-                          </NavLink>
+                          )}
+
+                          <FolderRoundedIcon className="folder-icon" />
+                          <p className="accordion-details-item-title">
+                            {event.name}
+                          </p>
                         </div>
-                      );
-                    })}
-                  </div>
+                      </NavLink>
+                    </div>
+                  ))}
                 </div>
-              </AccordionDetails>
-            </Accordion>
-          );
-        })}
+              </div>
+            </AccordionDetails>
+          </Accordion>
+        ))}
       </div>
       <Modal
         open={open}

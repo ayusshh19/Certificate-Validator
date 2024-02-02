@@ -77,3 +77,39 @@
     border-radius: 18px;
     box-shadow: inset;
 }
+
+.dashboard .acc-menu {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.733);
+    border-radius: 10px;
+    position: absolute;
+    top: min(5.5vh, 45px);
+    right: -23%;
+    width: 70px;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.dashboard .acc-menu button {
+    background-color: transparent;
+    border: none;
+    color: white;
+    padding: 8px;
+    cursor: pointer;
+    width: 100%;
+    margin: 0;
+    font-size: 0.8rem;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.dashboard .acc-menu button:hover {
+    background-color: #2380dc;
+}
+
+.dashboard .acc-menu button:nth-child(2):hover {
+    background-color: red;
+}
