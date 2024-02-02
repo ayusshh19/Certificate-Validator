@@ -6,49 +6,29 @@ import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { StateContext } from "../../../context/StateContext";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
-import { set } from "mongoose";
+import { StateContext } from "../../../context/StateContext";
 
 const positionOptions = ["1st", "2nd", "3rd", "Participation"];
 
+const initialState = {
+  name: "",
+  year: new Date().getFullYear(),
+  position: "",
+  event: "",
+  nameError: false,
+  positionError: false,
+  eventError: false,
+};
+
 const GenerateCertificate = () => {
   const { events, generateYearOptions } = useContext(StateContext);
-  const [register, setRegister] = useState({
-    name: "",
-    year: new Date().getFullYear(),
-    position: "",
-    event: "",
-    nameError: false,
-    positionError: false,
-    eventError: false,
-  });
-
+  const [register, setRegister] = useState(initialState);
   const [generatedDate, setGeneratedDate] = useState(null);
-
-  const handleEventNameChange = (event) => {
-    const name = event.target.value;
-    setRegister({ ...register, name: name, nameError: !name.trim() });
-  };
-
-  const handleYearChange = (event) => {
-    setRegister({ ...register, year: event.target.value });
-  };
-
-  const handlePositionChange = (event) => {
-    const position = event.target.value;
-    setRegister({
-      ...register,
-      position: position,
-      positionError: !position.trim(),
-    });
-  };
-
-  const [selectedEvent, setSelectedEvent] = useState("");
   const [date, setDate] = useState(
     dayjs(
       new Date(
@@ -59,33 +39,55 @@ const GenerateCertificate = () => {
     )
   );
 
+  const handleInputChange = (field, value) => {
+    if (typeof value === "string") {
+      setRegister({
+        ...register,
+        [field]: value,
+        [`${field}Error`]: !value.trim(),
+      });
+    } else {
+      // Handle the case when the value is not a string (e.g., handle other data types)
+      setRegister({
+        ...register,
+        [field]: value,
+        [`${field}Error`]: true, // You might want to handle this differently based on your requirements
+      });
+    }
+  };
+
+  const handleYearChange = (event) => {
+    handleInputChange("year", event.target.value);
+  };
+
   const handleEventChange = (event) => {
     const selectedEventValue = event.target.value;
-    setRegister({
-      ...register,
-      event: selectedEventValue,
-      eventError: !selectedEventValue.trim(),
-    });
-    setSelectedEvent(selectedEventValue);
+    handleInputChange("event", selectedEventValue);
+  };
+
+  const handlePositionChange = (event) => {
+    handleInputChange("position", event.target.value);
+  };
+
+  const handleEventNameChange = (event) => {
+    handleInputChange("name", event.target.value);
+  };
+
+  const handleDatePickerChange = (newValue) => {
+    setDate(newValue);
   };
 
   const handleSubmit = () => {
     const { name, position, event } = register;
 
-    if (!name.trim()) {
-      setRegister({ ...register, nameError: true });
-      return;
-    }
-
-    if (!position.trim()) {
-      alert("Position cannot be empty");
-      setRegister({ ...register, positionError: true });
-      return;
-    }
-
-    if (!event.trim()) {
-      alert("Event cannot be empty");
-      setRegister({ ...register, eventError: true });
+    if (!name.trim() || !position.trim() || !event.trim()) {
+      alert("All fields are required");
+      setRegister({
+        ...register,
+        nameError: !name.trim(),
+        positionError: !position.trim(),
+        eventError: !event.trim(),
+      });
       return;
     }
 
@@ -97,15 +99,7 @@ const GenerateCertificate = () => {
       generatedDate: currentDate,
     });
 
-    setRegister({
-      name: "",
-      year: new Date().getFullYear(),
-      position: "",
-      event: "",
-      nameError: false,
-      positionError: false,
-      eventError: false,
-    });
+    setRegister(initialState);
     alert("Certificate Generated Successfully! Check console for details.");
     // Add your logic for generating the certificate here
   };
@@ -163,7 +157,7 @@ const GenerateCertificate = () => {
                 <Select
                   labelId="event-label"
                   id="event-select"
-                  value={selectedEvent}
+                  value={register.event}
                   onChange={handleEventChange}
                   label="Event"
                   error={register.eventError}
@@ -216,12 +210,17 @@ const GenerateCertificate = () => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={["DatePicker"]}>
                   <DatePicker
+                    sx={{
+                      ".css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root": {
+                        borderRadius: "12px",
+                      },
+                    }}
                     variant="standard"
                     className="w-100 custom-date-picker"
                     label="Certificate Date"
                     format="DD/MM/YYYY"
                     value={date}
-                    onChange={(newValue) => setDate(newValue)}
+                    onChange={handleDatePickerChange}
                   />
                 </DemoContainer>
               </LocalizationProvider>
