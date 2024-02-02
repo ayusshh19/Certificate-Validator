@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -18,6 +18,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import axios from "axios";
 import { SERVER_URL } from "../../../config";
+import { StateContext } from "../../../context/StateContext";
 
 import "./Dashboard.css";
 
@@ -31,7 +32,7 @@ const style = {
 };
 
 const Dashboard = () => {
-  const [events, setEvents] = useState([]);
+  const { events } = useContext(StateContext);
 
   const [open, setOpen] = useState(false);
   const [register, setRegister] = useState({
@@ -39,24 +40,6 @@ const Dashboard = () => {
     year: new Date().getFullYear(),
     nameError: false,
   });
-
-  useEffect(() => {
-    const controller = new AbortController();
-    console.log("fetching events");
-    (async () => {
-      try {
-        const { data } = await axios.get(`${SERVER_URL}/api/event/fetch`, {
-          signal: controller.signal,
-        });
-        setEvents(data);
-      } catch (err) {
-        if (err.name === "CanceledError") return;
-        console.log(err);
-        alert(err.response?.data.error || err.message || err);
-      }
-    })();
-    return () => controller.abort();
-  }, []);
 
   const generateYearOptions = () => {
     const currentYear = new Date().getFullYear();
