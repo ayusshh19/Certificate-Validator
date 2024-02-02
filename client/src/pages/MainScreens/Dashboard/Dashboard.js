@@ -153,7 +153,7 @@ const Dashboard = () => {
               <AccordionDetails>
                 <div className="accordion-details">
                   <div className="row ">
-                    {year.events.map((event) => {
+                    {year?.events?.map((event) => {
                       return (
                         <div
                           key={event._id}
@@ -218,7 +218,7 @@ const Dashboard = () => {
               onChange={handleYearChange}
               label="Year"
             >
-              {generateYearOptions().map((year) => (
+              {generateYearOptions()?.map((year) => (
                 <MenuItem key={year} value={year}>
                   {year}
                 </MenuItem>
