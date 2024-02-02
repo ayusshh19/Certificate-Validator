@@ -79,8 +79,8 @@ const FetchAll = async (req, res, next) => {
 const Update = async (req, res, next) => {
   try {
     const { event_id } = req.params;
-    await EventSchema.findByIdAndUpdate(event_id, req.query);
-    res.send("event updated");
+    await EventSchema.findByIdAndUpdate(event_id, req.body);
+    res.send("Event updated");
   } catch (err) {
     next(err);
   }

@@ -34,7 +34,6 @@ const style = {
 
 const Dashboard = () => {
   const { events, generateYearOptions, refreshFlag } = useContext(StateContext);
-
   const [open, setOpen] = useState(false);
   const [register, setRegister] = useState({
     name: "",
@@ -42,6 +41,11 @@ const Dashboard = () => {
     nameError: false,
   });
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [editEventModal, setEditModal] = useState(false);
+  const [selectedEditEvent, setSelectedEditEvent] = useState({
+    name: "",
+    id: null,
+  });
 
   const handleYearChange = (event) => {
     setRegister({ ...register, year: event.target.value });
@@ -65,10 +69,14 @@ const Dashboard = () => {
     setSelectedEvent(eventId);
   };
 
-  const handleEditEvent = (e, eventId) => {
+  const handleEditEvent = (e, eventId, eventName) => {
     e.preventDefault();
     e.stopPropagation();
-    alert(`Edit Clicked for Event ID: ${eventId}`);
+    setEditModal(true);
+    setSelectedEditEvent({
+      name: eventName,
+      id: eventId,
+    });
   };
 
   const handleClose = () => {
@@ -87,6 +95,7 @@ const Dashboard = () => {
     if (window.confirm("Are you sure you want to delete this event?")) {
       try {
         await axios.delete(`/api/event/delete/${eventId}`);
+        // Call the refreshFlag function if it's defined
         refreshFlag();
       } catch (err) {
         console.log(err);
@@ -104,6 +113,25 @@ const Dashboard = () => {
       const { data } = await axios.post("/api/event/register", register);
       refreshFlag();
       handleClose();
+    } catch (err) {
+      console.log(err);
+      alert(err.response?.data.error || err.message || err);
+    }
+  };
+
+  const updateEvent = async () => {
+    const name = selectedEditEvent.name;
+    const id = selectedEditEvent.id;
+
+    if (!name.trim()) {
+      setRegister({ ...register, nameError: true });
+      return;
+    }
+
+    try {
+      await axios.put(`/api/event/update/${id}`, { name });
+      refreshFlag();
+      setEditModal(false);
     } catch (err) {
       console.log(err);
       alert(err.response?.data.error || err.message || err);
@@ -179,7 +207,9 @@ const Dashboard = () => {
                             <div
                               className="acc-menu"
                               onMouseLeave={handleMoreIconMouseLeave}
-                              onClick={(e) => handleEditEvent(e, event._id)}
+                              onClick={(e) =>
+                                handleEditEvent(e, event._id, event.name)
+                              }
                             >
                               <button className="d-flex align-items-center justify-content-center">
                                 Edit{" "}
@@ -269,6 +299,65 @@ const Dashboard = () => {
             onClick={handleAddEvent}
           >
             Add
+          </Button>
+        </Box>
+      </Modal>
+      {/* EDIT EVENT MODAL */}
+      <Modal
+        open={editEventModal}
+        onClose={() => setEditModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style} className="event-modal">
+          <h4>Edit Event Name</h4>
+          <FormControl sx={{ minWidth: 120, width: "100%" }} className="mt-3">
+            <TextField
+              autoComplete="off"
+              id="event-name"
+              label="Event Name"
+              variant="standard"
+              sx={{ width: "100%" }}
+              value={selectedEditEvent.name}
+              onChange={(e) => {
+                setSelectedEditEvent({
+                  ...selectedEditEvent,
+                  name: e.target.value,
+                });
+              }}
+              error={register.nameError}
+              helperText={register.nameError ? "Event Name is required" : ""}
+            />
+          </FormControl>
+          {/* <FormControl
+            variant="standard"
+            sx={{ minWidth: 120, width: "100%" }}
+            className="mt-3"
+          >
+            <InputLabel id="demo-simple-select-standard-label">Year</InputLabel>
+            <Select
+              labelId="demo-simple-select-standard-label"
+              id="demo-simple-select-standard"
+              value={register.year}
+              onChange={handleYearChange}
+              label="Year"
+            >
+              {generateYearOptions()?.map((year) => (
+                <MenuItem key={year} value={year}>
+                  {year}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl> */}
+          <Button
+            type="submit"
+            className="mt-4"
+            disableElevation
+            variant="contained"
+            style={{ borderRadius: "10px", textTransform: "capitalize" }}
+            onClick={updateEvent}
+          >
+            Update
           </Button>
         </Box>
       </Modal>
