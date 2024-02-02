@@ -17,7 +17,6 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import axios from "axios";
-import { SERVER_URL } from "../../../config";
 import { StateContext } from "../../../context/StateContext";
 
 import "./Dashboard.css";
@@ -70,10 +69,7 @@ const Dashboard = () => {
       return;
     }
     try {
-      const { data } = await axios.post(
-        `${SERVER_URL}/api/event/register`,
-        register
-      );
+      const { data } = await axios.post("/api/event/register", register);
       console.log(data);
       handleClose();
     } catch (err) {

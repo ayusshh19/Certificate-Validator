@@ -1,6 +1,5 @@
 import React, { useState, createContext, useEffect } from "react";
 import axios from "axios";
-import { SERVER_URL } from "../config";
 
 export const StateContext = createContext();
 
@@ -15,7 +14,7 @@ const StateProvider = ({ children }) => {
     console.log("fetching events");
     (async () => {
       try {
-        const { data } = await axios.get(`${SERVER_URL}/api/event/fetch`, {
+        const { data } = await axios.get("/api/event/fetch", {
           signal: controller.signal,
         });
         setEvents(data);
