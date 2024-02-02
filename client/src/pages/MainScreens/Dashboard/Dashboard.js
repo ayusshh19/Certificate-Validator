@@ -9,47 +9,107 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import { NavLink } from "react-router-dom";
 import Divider from "@mui/material/Divider";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 import "./Dashboard.css";
 
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "80vw",
+  maxWidth: "500px",
+};
+
+const data = [
+  {
+    year: 2024,
+    events: [
+      {
+        name: "Code-a-thon",
+        date: "2024-01-01",
+        id: "1",
+      },
+      {
+        name: "Technitude",
+        date: "2024-01-02",
+        id: "2",
+      },
+    ],
+  },
+  {
+    year: 2023,
+    events: [
+      {
+        name: "Event 1",
+        date: "2024-01-01",
+        id: "11",
+      },
+      {
+        name: "Event 2",
+        date: "2024-01-02",
+        id: "21",
+      },
+    ],
+  },
+];
+
 const Dashboard = () => {
-  const data = [
-    {
-      year: 2024,
-      events: [
-        {
-          name: "Code-a-thon",
-          date: "2024-01-01",
-          id: "1",
-        },
-        {
-          name: "Technitude",
-          date: "2024-01-02",
-          id: "2",
-        },
-      ],
-    },
-    {
-      year: 2023,
-      events: [
-        {
-          name: "Event 1",
-          date: "2024-01-01",
-          id: "11",
-        },
-        {
-          name: "Event 2",
-          date: "2024-01-02",
-          id: "21",
-        },
-      ],
-    },
-  ];
+  const [open, setOpen] = React.useState(false);
+  const [eventName, setEventName] = React.useState("");
+  const [selectedYear, setSelectedYear] = React.useState(
+    new Date().getFullYear()
+  );
+  const [eventNameError, setEventNameError] = React.useState(false);
+
+  const generateYearOptions = () => {
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    for (let i = currentYear - 5; i <= currentYear + 10; i++) {
+      years.push(i);
+    }
+    return years;
+  };
+
+  const handleYearChange = (event) => {
+    setSelectedYear(event.target.value);
+  };
+
+  const handleEventNameChange = (event) => {
+    setEventName(event.target.value);
+    setEventNameError(false);
+  };
 
   const handleMoreIconClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
     alert("MoreIcon Clicked!");
+  };
+
+  const handleAddEvent = () => {
+    if (!eventName.trim()) {
+      setEventNameError(true);
+      return;
+    }
+
+    console.log("Selected Year:", selectedYear);
+    console.log("Event Name:", eventName);
+
+    handleClose();
+  };
+
+  const handleClose = () => {
+    setEventName("");
+    setEventNameError(false);
+    setSelectedYear(new Date().getFullYear());
+    setOpen(false);
   };
 
   return (
@@ -61,6 +121,10 @@ const Dashboard = () => {
           variant="contained"
           startIcon={<AddIcon />}
           style={{ borderRadius: "10px", textTransform: "capitalize" }}
+          onClick={() => {
+            setEventName(""); // Reset event name when opening the modal
+            setOpen(true);
+          }}
         >
           Add Event
         </Button>
@@ -125,6 +189,59 @@ const Dashboard = () => {
           );
         })}
       </div>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style} className="event-modal">
+          <h4>Add Event</h4>
+          <FormControl sx={{ minWidth: 120, width: "100%" }} className="mt-3">
+            <TextField
+              autoComplete="off"
+              id="event-name"
+              label="Event Name"
+              variant="standard"
+              sx={{ width: "100%" }}
+              value={eventName}
+              onChange={handleEventNameChange}
+              error={eventNameError}
+              helperText={eventNameError ? "Event Name is required" : ""}
+            />
+          </FormControl>
+          <FormControl
+            variant="standard"
+            sx={{ minWidth: 120, width: "100%" }}
+            className="mt-3"
+          >
+            <InputLabel id="demo-simple-select-standard-label">Year</InputLabel>
+            <Select
+              labelId="demo-simple-select-standard-label"
+              id="demo-simple-select-standard"
+              value={selectedYear}
+              onChange={handleYearChange}
+              label="Year"
+            >
+              {generateYearOptions().map((year) => (
+                <MenuItem key={year} value={year}>
+                  {year}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button
+            type="submit"
+            className="mt-4"
+            disableElevation
+            variant="contained"
+            style={{ borderRadius: "10px", textTransform: "capitalize" }}
+            onClick={handleAddEvent}
+          >
+            Add
+          </Button>
+        </Box>
+      </Modal>
     </div>
   );
 };
