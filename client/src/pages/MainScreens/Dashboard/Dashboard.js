@@ -214,6 +214,7 @@ const Dashboard = () => {
                         <div
                           className="folder-cover"
                           onMouseLeave={handleMoreIconMouseLeave}
+                          title={event.createdAt}
                         >
                           <MoreVertIcon
                             className="more-icon"

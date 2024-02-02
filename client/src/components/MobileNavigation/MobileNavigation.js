@@ -17,8 +17,6 @@ const SideNavigation = () => {
     setValue(newValue);
   };
 
-  console.log(mobileNav);
-
   return (
     <div className={`mobileNav ${mobileNav === true ? "active" : ""}`}>
       <div
