@@ -1,8 +1,14 @@
+const errorResponse = require("../utils/errorResponse");
 const EventSchema = require("../models/EventSchema");
 
 const Register = async (req, res, next) => {
   try {
     const { name, year } = req.body;
+    const event = await EventSchema.findOne({
+      name,
+      year,
+    });
+    if (event) throw new errorResponse("event already registered", 400);
     const response = await EventSchema.create({
       name,
       year,

@@ -33,10 +33,10 @@ const columns = [
   },
 ];
 
-const handleDelete = async (certificateId) => {
+const handleDelete = async (certificate_id) => {
   try {
     const { data } = await axios.delete(
-      `${SERVER_URL}/api/certificate/delete/${certificateId}`
+      `${SERVER_URL}/api/certificate/delete/${certificate_id}`
     );
     console.log(data);
   } catch (err) {

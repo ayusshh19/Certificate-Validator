@@ -16,6 +16,8 @@ const Register = async (req, res, next) => {
     const { event_id, name, position, date } = req.body;
     const event = await EventSchema.findById(event_id);
     if (!event) throw new errorResponse("event is not registered", 404);
+    const certificate = await CertificateSchema.findOne({ name, event_id });
+    if (certificate) throw new errorResponse("name already registered", 400);
     const uid = await uidGenerator();
     const response = await CertificateSchema.create({
       event_id,
