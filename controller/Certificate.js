@@ -1,0 +1,58 @@
+const errorResponse = require("../utils/errorResponse");
+const EventSchema = require("../models/EventSchema");
+const CertificateSchema = require("../models/CertificateSchema");
+
+const Register = async (req, res, next) => {
+  try {
+    const { event_id, uid, name, position, date } = req.body;
+    const event = await EventSchema.findById(event_id);
+    if (!event) throw new errorResponse("event is not registered", 404);
+    const response = await CertificateSchema.create({
+      event_id,
+      uid,
+      name,
+      position,
+      date,
+    });
+    res.send(response);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const Delete = async (req, res, next) => {
+  try {
+    const { certificate_id } = req.params;
+    await CertificateSchema.findByIdAndDelete(certificate_id);
+    res.send("certificate deleted");
+  } catch (err) {
+    next(err);
+  }
+};
+
+const Fetch = async (req, res, next) => {
+  try {
+    const { event_id } = req.params;
+    const certificates = await CertificateSchema.find({ event_id }).lean();
+    res.json(certificates);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const Update = async (req, res, next) => {
+  try {
+    const { certificate_id } = req.params;
+    await CertificateSchema.findByIdAndUpdate(certificate_id, req.query);
+    res.send("certificate updated");
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = {
+  Register,
+  Delete,
+  Fetch,
+  Update,
+};
