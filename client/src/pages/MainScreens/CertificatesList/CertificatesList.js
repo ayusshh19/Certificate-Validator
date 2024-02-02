@@ -56,6 +56,7 @@ const generateRowsWithSerialNumber = (rows) => {
 const CertificatesList = () => {
   const { event_id } = useParams();
   const [certificates, setCertificates] = useState([]);
+  const [event, setEvent] = useState("");
 
   useEffect(() => {
     const controller = new AbortController();
@@ -68,7 +69,8 @@ const CertificatesList = () => {
             signal: controller.signal,
           }
         );
-        setCertificates(data);
+        setCertificates(data.certificates || []);
+        setEvent(data.event || "");
       } catch (err) {
         if (err.name === "CanceledError") return;
         console.log(err);
@@ -101,7 +103,7 @@ const CertificatesList = () => {
             <ChevronLeftIcon />
           </Button>
         </NavLink>
-        <h2>{event_id} Code-A-Thon</h2>
+        <h2>{event}</h2>
       </div>
 
       <div className="container-fluid mt-4">
