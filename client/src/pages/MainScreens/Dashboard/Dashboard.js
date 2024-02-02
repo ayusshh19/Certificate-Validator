@@ -31,7 +31,7 @@ const style = {
 };
 
 const Dashboard = () => {
-  const { events } = useContext(StateContext);
+  const { events, generateYearOptions } = useContext(StateContext);
 
   const [open, setOpen] = useState(false);
   const [register, setRegister] = useState({
@@ -39,15 +39,6 @@ const Dashboard = () => {
     year: new Date().getFullYear(),
     nameError: false,
   });
-
-  const generateYearOptions = () => {
-    const currentYear = new Date().getFullYear();
-    const years = [];
-    for (let i = currentYear - 10; i <= currentYear + 2; i++) {
-      years.push(i);
-    }
-    return years;
-  };
 
   const handleYearChange = (event) => {
     setRegister({ ...register, year: event.target.value });

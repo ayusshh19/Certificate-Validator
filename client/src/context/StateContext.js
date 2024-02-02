@@ -11,7 +11,6 @@ const StateProvider = ({ children }) => {
 
   useEffect(() => {
     const controller = new AbortController();
-    console.log("fetching events");
     (async () => {
       try {
         const { data } = await axios.get("/api/event/fetch", {
@@ -27,6 +26,15 @@ const StateProvider = ({ children }) => {
     return () => controller.abort();
   }, []);
 
+  const generateYearOptions = () => {
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    for (let i = currentYear - 10; i <= currentYear + 2; i++) {
+      years.push(i);
+    }
+    return years;
+  };
+
   return (
     <StateContext.Provider
       value={{
@@ -37,6 +45,7 @@ const StateProvider = ({ children }) => {
         alerts,
         setAlerts,
         events,
+        generateYearOptions,
       }}
     >
       {children}
