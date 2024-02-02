@@ -4,6 +4,8 @@ db();
 const express = require("express");
 const cors = require("cors");
 const errorHandler = require("./middlewares/errorHandler");
+const EventRoute = require("./routes/EventRoute");
+const CertificateRoute = require("./routes/CertificateRoute");
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -11,6 +13,9 @@ const port = process.env.PORT || 8000;
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
+
+app.use("/api/event", EventRoute);
+app.use("/api/certificate", CertificateRoute);
 
 app.use(errorHandler);
 
