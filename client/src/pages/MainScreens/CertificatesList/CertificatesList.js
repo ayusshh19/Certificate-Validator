@@ -118,6 +118,9 @@ const CertificatesList = () => {
                 paginationModel: { page: 0, pageSize: 10 },
               },
             }}
+            localeText={{
+              noRowsLabel: "No certificates generated yet!",
+            }}
             pageSizeOptions={[10, 20]}
           />
         </div>

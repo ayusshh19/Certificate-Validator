@@ -34,7 +34,7 @@ const SideNavigation = () => {
         <Tab
           icon={<NoteAddIcon />}
           iconPosition="start"
-          label="Create Certificate"
+          label="Generate Certificate"
           component={NavLink}
           to="/generate-certificate"
         />

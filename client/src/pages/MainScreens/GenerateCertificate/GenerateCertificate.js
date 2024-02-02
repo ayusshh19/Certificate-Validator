@@ -12,6 +12,8 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
 import { StateContext } from "../../../context/StateContext";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
 
 const positionOptions = ["1st", "2nd", "3rd", "Participation"];
 
@@ -26,7 +28,8 @@ const initialState = {
 };
 
 const GenerateCertificate = () => {
-  const { events, generateYearOptions } = useContext(StateContext);
+  const { events, generateYearOptions, mobileNav, toggleMobileNav } =
+    useContext(StateContext);
   const [register, setRegister] = useState(initialState);
   const [generatedDate, setGeneratedDate] = useState(null);
   const [date, setDate] = useState(
@@ -106,7 +109,23 @@ const GenerateCertificate = () => {
 
   return (
     <div className="generate">
-      <h3>Create Certificate</h3>
+      <div className="d-flex align-items-center">
+        <IconButton
+          aria-label="delete"
+          size="large"
+          className="d-md-none"
+          onClick={() => {
+            toggleMobileNav(true);
+          }}
+        >
+          <MenuIcon
+            style={{
+              color: "#000000",
+            }}
+          />
+        </IconButton>
+        <h2>Generate Certificate</h2>
+      </div>
       <div className="container-fluid my-3">
         <Box component="form" noValidate autoComplete="off">
           <div className="row gy-4">

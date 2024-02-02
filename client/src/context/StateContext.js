@@ -9,6 +9,7 @@ const StateProvider = ({ children }) => {
   const [alerts, setAlerts] = useState([]);
   const [events, setEvents] = useState([]);
   const [fetchFlag, setFetchFlag] = useState(true);
+  const [mobileNav, setMobileNav] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -40,6 +41,10 @@ const StateProvider = ({ children }) => {
     setFetchFlag(!fetchFlag);
   };
 
+  const toggleMobileNav = (state) => {
+    setMobileNav(state);
+  };
+
   return (
     <StateContext.Provider
       value={{
@@ -52,6 +57,8 @@ const StateProvider = ({ children }) => {
         events,
         generateYearOptions,
         refreshFlag,
+        toggleMobileNav,
+        mobileNav,
       }}
     >
       {children}

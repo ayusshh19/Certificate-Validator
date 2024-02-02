@@ -20,6 +20,8 @@ import axios from "axios";
 import { StateContext } from "../../../context/StateContext";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import MenuIcon from "@mui/icons-material/Menu";
+import IconButton from "@mui/material/IconButton";
 
 import "./Dashboard.css";
 
@@ -33,7 +35,8 @@ const style = {
 };
 
 const Dashboard = () => {
-  const { events, generateYearOptions, refreshFlag } = useContext(StateContext);
+  const { events, generateYearOptions, refreshFlag, toggleMobileNav } =
+    useContext(StateContext);
   const [open, setOpen] = useState(false);
   const [register, setRegister] = useState({
     name: "",
@@ -141,7 +144,23 @@ const Dashboard = () => {
   return (
     <div className="dashboard">
       <div className="d-flex align-items-center justify-content-between">
-        <h2>Dashboard</h2>
+        <div className="d-flex align-items-center">
+          <IconButton
+            aria-label="delete"
+            size="large"
+            className="d-md-none"
+            onClick={() => {
+              toggleMobileNav(true);
+            }}
+          >
+            <MenuIcon
+              style={{
+                color: "#000000",
+              }}
+            />
+          </IconButton>
+          <h2>Dashboard</h2>
+        </div>
         <Button
           disableElevation
           variant="contained"
