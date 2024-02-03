@@ -51,13 +51,14 @@ const updateEvent = async (
   setEditModal
 ) => {
   const name = selectedEditEvent.name;
+  const year = selectedEditEvent.year;
   const id = selectedEditEvent.id;
   if (!name.trim()) {
     setRegister({ ...register, nameError: true });
     return;
   }
   try {
-    await axios.put(`/api/event/update/${id}`, { name });
+    await axios.put(`/api/event/update/${id}`, { name, year });
     refreshFlag();
     setEditModal(false);
   } catch (err) {

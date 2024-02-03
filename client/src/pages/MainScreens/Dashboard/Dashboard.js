@@ -50,6 +50,7 @@ const Dashboard = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedEditEvent, setSelectedEditEvent] = useState({
     name: "",
+    year: "",
     id: null,
   });
 
@@ -61,12 +62,17 @@ const Dashboard = () => {
     setSelectedEvent(null);
   };
 
-  const handleEditEvent = (e, eventId, eventName) => {
+  // const handleYearChange = (e) => {
+  //   setRegister({ ...register, year: e.target.value });
+  // };
+
+  const handleEditEvent = (e, eventId, eventName, year) => {
     e.preventDefault();
     e.stopPropagation();
     setEditModal(true);
     setSelectedEditEvent({
       name: eventName,
+      year: year,
       id: eventId,
     });
   };
@@ -167,7 +173,12 @@ const Dashboard = () => {
                               className="acc-menu"
                               onMouseLeave={handleMoreIconMouseLeave}
                               onClick={(e) =>
-                                handleEditEvent(e, event._id, event.name)
+                                handleEditEvent(
+                                  e,
+                                  event._id,
+                                  event.name,
+                                  event.year
+                                )
                               }
                             >
                               <button className="d-flex align-items-center justify-content-center">
@@ -281,7 +292,7 @@ const Dashboard = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style} className="event-modal">
-          <h4>Edit Event Name</h4>
+          <h4>Edit Event </h4>
           <FormControl sx={{ minWidth: 120, width: "100%" }} className="mt-3">
             <TextField
               autoComplete="off"
@@ -300,7 +311,7 @@ const Dashboard = () => {
               helperText={register.nameError ? "Event Name is required" : ""}
             />
           </FormControl>
-          {/* <FormControl
+          <FormControl
             variant="standard"
             sx={{ minWidth: 120, width: "100%" }}
             className="mt-3"
@@ -309,8 +320,13 @@ const Dashboard = () => {
             <Select
               labelId="demo-simple-select-standard-label"
               id="demo-simple-select-standard"
-              value={register.year}
-              onChange={handleYearChange}
+              value={selectedEditEvent.year}
+              onChange={(e) => {
+                setSelectedEditEvent({
+                  ...selectedEditEvent,
+                  year: e.target.value,
+                });
+              }}
               label="Year"
             >
               {generateYearOptions()?.map((year) => (
@@ -319,7 +335,7 @@ const Dashboard = () => {
                 </MenuItem>
               ))}
             </Select>
-          </FormControl> */}
+          </FormControl>
           <Button
             type="submit"
             className="mt-4"
