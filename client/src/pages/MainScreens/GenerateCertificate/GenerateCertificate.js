@@ -14,97 +14,37 @@ import Button from "@mui/material/Button";
 import { StateContext } from "../../../context/StateContext";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-
-const positionOptions = ["1st", "2nd", "3rd", "Participation"];
+import { RegisterCertificate } from "../../../utils/Certificate";
 
 const initialState = {
   name: "",
   year: new Date().getFullYear(),
   position: "",
   event: "",
+  date: dayjs(
+    new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDate()
+    )
+  ),
   nameError: false,
   positionError: false,
   eventError: false,
 };
 
 const GenerateCertificate = () => {
-  const { events, generateYearOptions, mobileNav, toggleMobileNav } =
+  const { events, generateYearOptions, toggleMobileNav } =
     useContext(StateContext);
+
   const [register, setRegister] = useState(initialState);
-  const [generatedDate, setGeneratedDate] = useState(null);
-  const [date, setDate] = useState(
-    dayjs(
-      new Date(
-        new Date().getFullYear(),
-        new Date().getMonth(),
-        new Date().getDate()
-      )
-    )
-  );
 
   const handleInputChange = (field, value) => {
-    if (typeof value === "string") {
-      setRegister({
-        ...register,
-        [field]: value,
-        [`${field}Error`]: !value.trim(),
-      });
-    } else {
-      // Handle the case when the value is not a string (e.g., handle other data types)
-      setRegister({
-        ...register,
-        [field]: value,
-        [`${field}Error`]: true, // You might want to handle this differently based on your requirements
-      });
-    }
-  };
-
-  const handleYearChange = (event) => {
-    handleInputChange("year", event.target.value);
-  };
-
-  const handleEventChange = (event) => {
-    const selectedEventValue = event.target.value;
-    handleInputChange("event", selectedEventValue);
-  };
-
-  const handlePositionChange = (event) => {
-    handleInputChange("position", event.target.value);
-  };
-
-  const handleEventNameChange = (event) => {
-    handleInputChange("name", event.target.value);
-  };
-
-  const handleDatePickerChange = (newValue) => {
-    setDate(newValue);
-  };
-
-  const handleSubmit = () => {
-    const { name, position, event } = register;
-
-    if (!name.trim() || !position.trim() || !event.trim()) {
-      alert("All fields are required");
-      setRegister({
-        ...register,
-        nameError: !name.trim(),
-        positionError: !position.trim(),
-        eventError: !event.trim(),
-      });
-      return;
-    }
-
-    const currentDate = new Date();
-    setGeneratedDate(currentDate);
-
-    console.log("Certificate Details:", {
+    setRegister({
       ...register,
-      generatedDate: currentDate,
+      [field]: value,
+      [`${field}Error`]: false,
     });
-
-    setRegister(initialState);
-    alert("Certificate Generated Successfully! Check console for details.");
-    // Add your logic for generating the certificate here
   };
 
   return (
@@ -136,7 +76,7 @@ const GenerateCertificate = () => {
                 label="Certified to (Name)"
                 variant="standard"
                 value={register.name}
-                onChange={handleEventNameChange}
+                onChange={(e) => handleInputChange("name", e.target.value)}
                 error={register.nameError}
                 helperText={register.nameError ? "Name cannot be empty" : ""}
               />
@@ -154,7 +94,7 @@ const GenerateCertificate = () => {
                   labelId="demo-simple-select-standard-label"
                   id="demo-simple-select-standard"
                   value={register.year}
-                  onChange={handleYearChange}
+                  onChange={(e) => handleInputChange("year", e.target.value)}
                   label="Year"
                 >
                   {generateYearOptions()?.map((year) => (
@@ -165,7 +105,6 @@ const GenerateCertificate = () => {
                 </Select>
               </FormControl>
             </div>
-
             <div className="col-md-6 col-lg-4 d-flex align-items-end">
               <FormControl
                 variant="standard"
@@ -177,7 +116,7 @@ const GenerateCertificate = () => {
                   labelId="event-label"
                   id="event-select"
                   value={register.event}
-                  onChange={handleEventChange}
+                  onChange={(e) => handleInputChange("event", e.target.value)}
                   label="Event"
                   error={register.eventError}
                   helperText={
@@ -185,10 +124,10 @@ const GenerateCertificate = () => {
                   }
                 >
                   {events
-                    ?.filter((year) => year.year === register.year)
-                    .map((year) => {
-                      return year.events.map((event) => (
-                        <MenuItem key={event._id} value={event.name}>
+                    ?.filter((years) => years.year === register.year)
+                    .map((years) => {
+                      return years.events.map((event) => (
+                        <MenuItem key={event._id} value={event._id}>
                           {event.name}
                         </MenuItem>
                       ));
@@ -209,14 +148,21 @@ const GenerateCertificate = () => {
                   labelId="demo-simple-select-standard-label"
                   id="demo-simple-select-standard"
                   value={register.position}
-                  onChange={handlePositionChange}
+                  onChange={(e) =>
+                    handleInputChange("position", e.target.value)
+                  }
                   label="Position"
                   error={register.positionError}
                   helperText={
                     register.positionError ? "Position cannot be empty" : ""
                   }
                 >
-                  {positionOptions.map((pos) => (
+                  {[
+                    "participant",
+                    "winner",
+                    "1st runner-up",
+                    "2nd runner-up",
+                  ].map((pos) => (
                     <MenuItem key={pos} value={pos}>
                       {pos}
                     </MenuItem>
@@ -238,8 +184,8 @@ const GenerateCertificate = () => {
                     className="w-100 custom-date-picker"
                     label="Certificate Date"
                     format="DD/MM/YYYY"
-                    value={date}
-                    onChange={handleDatePickerChange}
+                    value={register.date}
+                    onChange={(value) => handleInputChange("date", value)}
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -251,7 +197,9 @@ const GenerateCertificate = () => {
         <Button
           variant="contained"
           style={{ borderRadius: "12px", padding: "10px 50px" }}
-          onClick={handleSubmit}
+          onClick={() =>
+            RegisterCertificate(register, setRegister, initialState)
+          }
         >
           Generate Certificate
         </Button>
