@@ -6,14 +6,31 @@ import { NavLink } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import axios from "axios";
+import {
+  DeleteCertificate,
+  fetchCertificates,
+} from "../../../utils/Certificate";
+import dayjs from "dayjs";
 
 const columns = [
   { field: "serialNumber", headerName: "Serial No.", width: 100 },
-  { field: "date", headerName: "Date", width: 130, sortable: false },
+  {
+    field: "uid",
+    headerName: "Certificate Number",
+    width: 200,
+    sortable: false,
+  },
   { field: "name", headerName: "Name", width: 200 },
   { field: "position", headerName: "Position", width: 100 },
-  { field: "uid", headerName: "Certificate ID", width: 200, sortable: false },
+  {
+    field: "date",
+    headerName: "Date",
+    width: 130,
+    sortable: false,
+    valueFormatter: (params) => {
+      return dayjs(params.value).format("DD-MM-YYYY");
+    },
+  },
   {
     field: "actions",
     headerName: "Actions",
@@ -24,25 +41,13 @@ const columns = [
       <IconButton
         aria-label="delete"
         color="error"
-        onClick={() => handleDelete(params.row.id)}
+        onClick={() => DeleteCertificate(params.row.id)}
       >
         <DeleteIcon />
       </IconButton>
     ),
   },
 ];
-
-const handleDelete = async (certificate_id) => {
-  try {
-    const { data } = await axios.delete(
-      `/api/certificate/delete/${certificate_id}`
-    );
-    console.log(data);
-  } catch (err) {
-    console.log(err);
-    alert(err.response?.data.error || err.message || err);
-  }
-};
 
 const generateRowsWithSerialNumber = (rows) => {
   return rows?.map((row, index) => ({
@@ -59,27 +64,9 @@ const CertificatesList = () => {
 
   useEffect(() => {
     const controller = new AbortController();
-    console.log("fetching certificates");
-    (async () => {
-      try {
-        const { data } = await axios.get(
-          `/api/certificate/fetch/event/${event_id}`,
-          {
-            signal: controller.signal,
-          }
-        );
-        setCertificates(data.certificates || []);
-        setEvent(data.event || "");
-      } catch (err) {
-        if (err.name === "CanceledError") return;
-        console.log(err);
-        alert(err.response?.data.error || err.message || err);
-      }
-    })();
+    fetchCertificates(event_id, controller, setCertificates, setEvent);
     return () => controller.abort();
   }, []);
-
-  const rowsWithSerialNumber = generateRowsWithSerialNumber(certificates);
 
   return (
     <div>
@@ -111,7 +98,7 @@ const CertificatesList = () => {
             style={{
               borderRadius: "18px",
             }}
-            rows={rowsWithSerialNumber}
+            rows={generateRowsWithSerialNumber(certificates)}
             columns={columns}
             initialState={{
               pagination: {
