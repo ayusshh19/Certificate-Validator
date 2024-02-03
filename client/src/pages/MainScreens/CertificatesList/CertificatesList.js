@@ -1,16 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { NavLink } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import QrCode2Icon from "@mui/icons-material/QrCode2";
+import QRCode from "react-qr-code";
 import {
   DeleteCertificate,
   fetchCertificates,
 } from "../../../utils/Certificate";
 import dayjs from "dayjs";
+import { toPng } from "html-to-image";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "80vw",
+  maxWidth: "500px",
+};
 
 const columns = [
   { field: "serialNumber", headerName: "Serial No.", width: 100 },
@@ -30,6 +44,18 @@ const columns = [
     valueFormatter: (params) => {
       return dayjs(params.value).format("DD-MM-YYYY");
     },
+  },
+  {
+    field: "qrCode",
+    headerName: "QR Code",
+    sortable: false,
+    filterable: false,
+    width: 120,
+    renderCell: (params) => (
+      <IconButton aria-label="qr-code" color="primary">
+        <QrCode2Icon />
+      </IconButton>
+    ),
   },
   {
     field: "actions",
@@ -57,10 +83,27 @@ const generateRowsWithSerialNumber = (rows) => {
   }));
 };
 
+const htmlToImageConvert = (qr_code, certificate) => {
+  toPng(qr_code.current, { cacheBust: false })
+    .then((dataUrl) => {
+      const link = document.createElement("a");
+      link.download = certificate?.name + "-" + certificate?.uid + ".png";
+      link.href = dataUrl;
+      link.click();
+    })
+    .catch((err) => {
+      alert(err.message || "Something went wrong");
+    });
+};
+
 const CertificatesList = () => {
   const { event_id } = useParams();
   const [certificates, setCertificates] = useState([]);
   const [event, setEvent] = useState("");
+  const [open, setOpen] = useState(false);
+  const [certificate, setCertificate] = useState(null);
+
+  const qr_code = useRef(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -109,9 +152,48 @@ const CertificatesList = () => {
               noRowsLabel: "No certificates generated yet!",
             }}
             pageSizeOptions={[10, 20]}
+            onCellClick={(params) => {
+              if (params.field === "qrCode") {
+                setCertificate({
+                  ...params.row,
+                  url: `${window.location.origin}/verify-certificate/${params.row.uid}`,
+                });
+                setOpen(true);
+              }
+            }}
           />
         </div>
       </div>
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style} className="event-modal">
+          <h4>QR Code</h4>
+          <div
+            ref={qr_code}
+            style={{
+              borderRadius: "10px",
+              boxShadow: "0px 0px 10px 0px #000000",
+              width: "100%",
+              maxWidth: "200px",
+              padding: "10px 20px",
+              margin: "20px auto 0 auto",
+              backgroundColor: "white",
+            }}
+          >
+            <QRCode
+              size={256}
+              style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+              value={certificate?.url || ""}
+              viewBox={`0 0 256 256`}
+            />
+            <h6>{certificate?.uid}</h6>
+          </div>
+        </Box>
+      </Modal>
     </div>
   );
 };
