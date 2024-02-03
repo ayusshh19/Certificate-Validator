@@ -1,5 +1,7 @@
 import axios from "axios";
 import dayjs from "dayjs";
+import { useContext } from "react";
+import { StateContext } from "../context/StateContext";
 
 const RegisterCertificate = async (register, setRegister, initialState) => {
   const { name, position, event } = register;
@@ -24,9 +26,10 @@ const RegisterCertificate = async (register, setRegister, initialState) => {
   }
 };
 
-const DeleteCertificate = async (certificate_id) => {
+const DeleteCertificate = async (certificate_id, refreshCertificatesFlag) => {
   try {
     await axios.delete(`/api/certificate/delete/${certificate_id}`);
+    refreshCertificatesFlag();
   } catch (err) {
     console.log(err);
     alert(err.response?.data.error || err.message || err);

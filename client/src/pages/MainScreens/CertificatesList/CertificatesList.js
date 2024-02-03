@@ -64,11 +64,7 @@ const columns = [
     filterable: false,
     width: 120,
     renderCell: (params) => (
-      <IconButton
-        aria-label="delete"
-        color="error"
-        onClick={() => DeleteCertificate(params.row.id)}
-      >
+      <IconButton aria-label="delete" color="error">
         <DeleteIcon />
       </IconButton>
     ),
@@ -102,14 +98,19 @@ const CertificatesList = () => {
   const [event, setEvent] = useState("");
   const [open, setOpen] = useState(false);
   const [certificate, setCertificate] = useState(null);
+  const [refCerti, setRefCerti] = useState(false);
 
   const qr_code = useRef(null);
+
+  const refreshCertificates = () => {
+    setRefCerti((prev) => !prev);
+  };
 
   useEffect(() => {
     const controller = new AbortController();
     fetchCertificates(event_id, controller, setCertificates, setEvent);
     return () => controller.abort();
-  }, []);
+  }, [refCerti]);
 
   return (
     <div>
@@ -159,6 +160,10 @@ const CertificatesList = () => {
                   url: `${window.location.origin}/verify-certificate/${params.row.uid}`,
                 });
                 setOpen(true);
+              } else if (params.field === "actions") {
+                (async () => {
+                  await DeleteCertificate(params.row.id, refreshCertificates);
+                })();
               }
             }}
           />
