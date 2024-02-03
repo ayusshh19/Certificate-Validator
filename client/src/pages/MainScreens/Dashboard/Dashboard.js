@@ -62,10 +62,6 @@ const Dashboard = () => {
     setSelectedEvent(null);
   };
 
-  // const handleYearChange = (e) => {
-  //   setRegister({ ...register, year: e.target.value });
-  // };
-
   const handleEditEvent = (e, eventId, eventName, year) => {
     e.preventDefault();
     e.stopPropagation();

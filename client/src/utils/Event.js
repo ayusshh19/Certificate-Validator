@@ -31,7 +31,8 @@ const DeleteEvent = async (e, event_id, refreshFlag) => {
   }
 };
 
-const fetchEvents = async (controller, setEvents) => {
+const fetchEvents = async (controller, setEvents, toggleLoading) => {
+  toggleLoading(true);
   try {
     const { data } = await axios.get("/api/event/fetch", {
       signal: controller.signal,
@@ -41,6 +42,7 @@ const fetchEvents = async (controller, setEvents) => {
     if (err.name === "CanceledError") return;
     alert(err.response?.data.error || err.message || err);
   }
+  toggleLoading(false);
 };
 
 const updateEvent = async (

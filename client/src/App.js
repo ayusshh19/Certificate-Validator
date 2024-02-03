@@ -3,15 +3,22 @@ import Button from "@mui/material/Button";
 import MainScreen from "./pages/MainScreens/MainScreen";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Auth from "./pages/AuthScreens/Auth";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { StateContext } from "./context/StateContext";
 
 function App() {
-  const [isAuth, setIsAuth] = useState(true);
+  const { loading, isLogin } = useContext(StateContext);
+
   return (
     <div className="App">
+      {loading && (
+        <div className="loading-screen">
+          <div className="loader"></div>
+        </div>
+      )}
       <Router>
         <Routes>
-          {isAuth ? (
+          {isLogin ? (
             <Route path="/*" element={<MainScreen />} />
           ) : (
             <Route path="/*" element={<Auth />} />

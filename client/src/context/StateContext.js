@@ -4,16 +4,20 @@ import { fetchEvents } from "../utils/Event";
 export const StateContext = createContext();
 
 const StateProvider = ({ children }) => {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [alerts, setAlerts] = useState([]);
   const [events, setEvents] = useState([]);
   const [fetchFlag, setFetchFlag] = useState(true);
   const [mobileNav, setMobileNav] = useState(false);
 
+  const toggleLoading = (state) => {
+    setLoading(state);
+  };
+
   useEffect(() => {
     const controller = new AbortController();
-    fetchEvents(controller, setEvents);
+    fetchEvents(controller, setEvents, toggleLoading);
     return () => controller.abort();
   }, [fetchFlag]);
 
@@ -48,6 +52,7 @@ const StateProvider = ({ children }) => {
         refreshFlag,
         toggleMobileNav,
         mobileNav,
+        toggleLoading,
       }}
     >
       {children}

@@ -64,7 +64,7 @@ const columns = [
     headerName: "Edit",
     sortable: false,
     filterable: false,
-    width: 40,
+    width: 60,
     renderCell: (params) => (
       <IconButton aria-label="edit" color="primary" className="ms-2">
         <EditIcon />
