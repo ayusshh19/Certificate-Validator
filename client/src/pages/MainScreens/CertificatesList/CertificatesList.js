@@ -22,8 +22,9 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "80vw",
-  maxWidth: "500px",
+  width: "fit-content",
+  maxWidth: "800px",
+  minWidth: "300px",
 };
 
 const columns = [
@@ -106,6 +107,17 @@ const CertificatesList = () => {
     setRefCerti((prev) => !prev);
   };
 
+  const formatDate = (inputDate) => {
+    const date = new Date(inputDate);
+
+    // Extract day, month, and year
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is zero-based
+    const year = String(date.getFullYear()).slice(-2);
+    const formattedDate = `${day}-${month}-${year}`;
+    return formattedDate;
+  };
+
   useEffect(() => {
     const controller = new AbortController();
     fetchCertificates(event_id, controller, setCertificates, setEvent);
@@ -175,29 +187,35 @@ const CertificatesList = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style} className="event-modal">
-          <h4>QR Code</h4>
-          <div
-            ref={qr_code}
-            style={{
-              borderRadius: "10px",
-              boxShadow: "0px 0px 10px 0px #000000",
-              width: "100%",
-              maxWidth: "200px",
-              padding: "10px 20px",
-              margin: "20px auto 0 auto",
-              backgroundColor: "white",
-            }}
-          >
-            <QRCode
-              size={256}
-              style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-              value={certificate?.url || ""}
-              viewBox={`0 0 256 256`}
-            />
-            <h6>{certificate?.uid}</h6>
+        <div style={style} className="event-modal p-0">
+          <div className="d-flex flex-column flex-md-row align-items-center align-items-md-start justify-content-center h-100 p-4">
+            <div className="text-center text-md-start">
+              <h4 className="mb-3">QR Code</h4>
+              <h6 className="my-2">Name : {certificate?.name}</h6>
+              <h6 className="my-2">Date : {formatDate(certificate?.date)}</h6>
+              <h6 className="my-2">Event : {event}</h6>
+              <h6>Position : {certificate?.position}</h6>
+            </div>
+            <div
+              className="ms-md-3 mt-4 mt-md-0 p-md-2"
+              ref={qr_code}
+              style={{
+                width: "100%",
+                maxWidth: "200px",
+                backgroundColor: "white",
+              }}
+            >
+              <QRCode
+                size={256}
+                style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                value={certificate?.url || ""}
+                viewBox={`0 0 256 256`}
+              />
+              <h6 className="mt-2 text-center">{certificate?.uid}</h6>
+            </div>
           </div>
-        </Box>
+          <section class="spikes"></section>
+        </div>
       </Modal>
     </div>
   );
