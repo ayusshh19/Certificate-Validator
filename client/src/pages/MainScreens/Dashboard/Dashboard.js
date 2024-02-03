@@ -151,7 +151,7 @@ const Dashboard = () => {
                       key={event._id}
                       className="accordion-details-item col-6 col-md-3 col-lg-2"
                     >
-                      <NavLink to={`/${event._id}`}>
+                      <NavLink to={`/event/${event._id}`}>
                         <div
                           className="folder-cover"
                           onMouseLeave={handleMoreIconMouseLeave}

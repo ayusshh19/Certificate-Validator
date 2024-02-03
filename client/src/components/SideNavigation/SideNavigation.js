@@ -28,7 +28,7 @@ const SideNavigation = () => {
           iconPosition="start"
           label="Dashboard"
           component={NavLink}
-          to="/"
+          to="/dashboard"
         />
 
         <Tab

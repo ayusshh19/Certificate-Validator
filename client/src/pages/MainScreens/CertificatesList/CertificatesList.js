@@ -16,6 +16,7 @@ import {
 } from "../../../utils/Certificate";
 import dayjs from "dayjs";
 import { toPng } from "html-to-image";
+import EditIcon from "@mui/icons-material/Edit";
 
 const style = {
   position: "absolute",
@@ -53,21 +54,35 @@ const columns = [
     filterable: false,
     width: 120,
     renderCell: (params) => (
-      <IconButton aria-label="qr-code" color="primary">
+      <IconButton aria-label="qr-code" color="default">
         <QrCode2Icon />
       </IconButton>
     ),
   },
   {
-    field: "actions",
-    headerName: "Actions",
+    field: "edit",
+    headerName: "Edit",
     sortable: false,
     filterable: false,
-    width: 120,
+    width: 40,
     renderCell: (params) => (
-      <IconButton aria-label="delete" color="error">
-        <DeleteIcon />
+      <IconButton aria-label="edit" color="primary" className="ms-2">
+        <EditIcon />
       </IconButton>
+    ),
+  },
+  {
+    field: "delete",
+    headerName: "Delete",
+    sortable: false,
+    filterable: false,
+    width: 60,
+    renderCell: (params) => (
+      <>
+        <IconButton aria-label="delete" color="error">
+          <DeleteIcon />
+        </IconButton>
+      </>
     ),
   },
 ];
@@ -127,7 +142,7 @@ const CertificatesList = () => {
   return (
     <div>
       <div className="d-flex align-items-center">
-        <NavLink to="/">
+        <NavLink to="/dashboard">
           <Button
             variant="outlined"
             style={{
@@ -172,9 +187,15 @@ const CertificatesList = () => {
                   url: `${window.location.origin}/verify-certificate/${params.row.uid}`,
                 });
                 setOpen(true);
-              } else if (params.field === "actions") {
+              } else if (params.field === "delete") {
                 (async () => {
-                  await DeleteCertificate(params.row.id, refreshCertificates);
+                  window.confirm(
+                    "Are you sure you want to delete this certificate?"
+                  ) &&
+                    (await DeleteCertificate(
+                      params.row.id,
+                      refreshCertificates
+                    ));
                 })();
               }
             }}
