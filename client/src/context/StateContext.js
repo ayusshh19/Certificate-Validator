@@ -1,5 +1,5 @@
 import React, { useState, createContext, useEffect } from "react";
-import axios from "axios";
+import { fetchEvents } from "../utils/Event";
 
 export const StateContext = createContext();
 
@@ -13,18 +13,7 @@ const StateProvider = ({ children }) => {
 
   useEffect(() => {
     const controller = new AbortController();
-    (async () => {
-      try {
-        const { data } = await axios.get("/api/event/fetch", {
-          signal: controller.signal,
-        });
-        setEvents(data);
-      } catch (err) {
-        if (err.name === "CanceledError") return;
-        console.log(err);
-        alert(err.response?.data.error || err.message || err);
-      }
-    })();
+    fetchEvents(controller, setEvents);
     return () => controller.abort();
   }, [fetchFlag]);
 
@@ -38,7 +27,7 @@ const StateProvider = ({ children }) => {
   };
 
   const refreshFlag = () => {
-    setFetchFlag(!fetchFlag);
+    setFetchFlag((prev) => !prev);
   };
 
   const toggleMobileNav = (state) => {

@@ -16,12 +16,12 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import axios from "axios";
 import { StateContext } from "../../../context/StateContext";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MenuIcon from "@mui/icons-material/Menu";
 import IconButton from "@mui/material/IconButton";
+import { RegisterEvent, DeleteEvent, updateEvent } from "../../../utils/Event";
 
 import "./Dashboard.css";
 
@@ -34,29 +34,24 @@ const style = {
   maxWidth: "500px",
 };
 
+const initialState = {
+  name: "",
+  year: new Date().getFullYear(),
+  nameError: false,
+};
+
 const Dashboard = () => {
   const { events, generateYearOptions, refreshFlag, toggleMobileNav } =
     useContext(StateContext);
+
   const [open, setOpen] = useState(false);
-  const [register, setRegister] = useState({
-    name: "",
-    year: new Date().getFullYear(),
-    nameError: false,
-  });
+  const [register, setRegister] = useState(initialState);
+  const [editModal, setEditModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [editEventModal, setEditModal] = useState(false);
   const [selectedEditEvent, setSelectedEditEvent] = useState({
     name: "",
     id: null,
   });
-
-  const handleYearChange = (event) => {
-    setRegister({ ...register, year: event.target.value });
-  };
-
-  const handleEventNameChange = (event) => {
-    setRegister({ ...register, name: event.target.value, nameError: false });
-  };
 
   const handleMoreIconMouseEnter = (id) => {
     setSelectedEvent(id);
@@ -64,12 +59,6 @@ const Dashboard = () => {
 
   const handleMoreIconMouseLeave = () => {
     setSelectedEvent(null);
-  };
-
-  const handleMoreIconClick = (e, eventId) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setSelectedEvent(eventId);
   };
 
   const handleEditEvent = (e, eventId, eventName) => {
@@ -83,62 +72,8 @@ const Dashboard = () => {
   };
 
   const handleClose = () => {
-    setRegister({
-      name: "",
-      year: new Date().getFullYear(),
-      nameError: false,
-    });
+    setRegister(initialState);
     setOpen(false);
-  };
-
-  const handleDelete = async (e, eventId) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (window.confirm("Are you sure you want to delete this event?")) {
-      try {
-        await axios.delete(`/api/event/delete/${eventId}`);
-        // Call the refreshFlag function if it's defined
-        refreshFlag();
-      } catch (err) {
-        console.log(err);
-        alert(err.response?.data.error || err.message || err);
-      }
-    }
-  };
-
-  const handleAddEvent = async () => {
-    if (!register.name.trim()) {
-      setRegister({ ...register, nameError: true });
-      return;
-    }
-    try {
-      const { data } = await axios.post("/api/event/register", register);
-      refreshFlag();
-      handleClose();
-    } catch (err) {
-      console.log(err);
-      alert(err.response?.data.error || err.message || err);
-    }
-  };
-
-  const updateEvent = async () => {
-    const name = selectedEditEvent.name;
-    const id = selectedEditEvent.id;
-
-    if (!name.trim()) {
-      setRegister({ ...register, nameError: true });
-      return;
-    }
-
-    try {
-      await axios.put(`/api/event/update/${id}`, { name });
-      refreshFlag();
-      setEditModal(false);
-    } catch (err) {
-      console.log(err);
-      alert(err.response?.data.error || err.message || err);
-    }
   };
 
   return (
@@ -218,7 +153,11 @@ const Dashboard = () => {
                         >
                           <MoreVertIcon
                             className="more-icon"
-                            onClick={(e) => handleMoreIconClick(e, event._id)}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setSelectedEvent(event._id);
+                            }}
                             onMouseEnter={() =>
                               handleMoreIconMouseEnter(event._id)
                             }
@@ -242,7 +181,9 @@ const Dashboard = () => {
                               </button>
                               <button
                                 className="d-flex align-items-center justify-content-center"
-                                onClick={(e) => handleDelete(e, event._id)}
+                                onClick={(e) =>
+                                  DeleteEvent(e, event._id, refreshFlag)
+                                }
                               >
                                 Delete{" "}
                                 <DeleteIcon
@@ -285,7 +226,13 @@ const Dashboard = () => {
               variant="standard"
               sx={{ width: "100%" }}
               value={register.name}
-              onChange={handleEventNameChange}
+              onChange={(e) =>
+                setRegister({
+                  ...register,
+                  name: e.target.value,
+                  nameError: false,
+                })
+              }
               error={register.nameError}
               helperText={register.nameError ? "Event Name is required" : ""}
             />
@@ -300,7 +247,9 @@ const Dashboard = () => {
               labelId="demo-simple-select-standard-label"
               id="demo-simple-select-standard"
               value={register.year}
-              onChange={handleYearChange}
+              onChange={(e) =>
+                setRegister({ ...register, year: e.target.value })
+              }
               label="Year"
             >
               {generateYearOptions()?.map((year) => (
@@ -316,7 +265,9 @@ const Dashboard = () => {
             disableElevation
             variant="contained"
             style={{ borderRadius: "10px", textTransform: "capitalize" }}
-            onClick={handleAddEvent}
+            onClick={() =>
+              RegisterEvent(register, setRegister, refreshFlag, handleClose)
+            }
           >
             Add
           </Button>
@@ -324,7 +275,7 @@ const Dashboard = () => {
       </Modal>
       {/* EDIT EVENT MODAL */}
       <Modal
-        open={editEventModal}
+        open={editModal}
         onClose={() => setEditModal(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -375,7 +326,15 @@ const Dashboard = () => {
             disableElevation
             variant="contained"
             style={{ borderRadius: "10px", textTransform: "capitalize" }}
-            onClick={updateEvent}
+            onClick={() =>
+              updateEvent(
+                selectedEditEvent,
+                register,
+                setRegister,
+                refreshFlag,
+                setEditModal
+              )
+            }
           >
             Update
           </Button>
