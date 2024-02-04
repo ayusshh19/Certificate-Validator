@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { NavLink } from "react-router-dom";
@@ -122,17 +121,6 @@ const CertificatesList = () => {
     setRefCerti((prev) => !prev);
   };
 
-  const formatDate = (inputDate) => {
-    const date = new Date(inputDate);
-
-    // Extract day, month, and year
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = String(date.getFullYear());
-    const formattedDate = `${day}-${month}-${year}`;
-    return formattedDate;
-  };
-
   useEffect(() => {
     const controller = new AbortController();
     fetchCertificates(event_id, controller, setCertificates, setEvent);
@@ -213,7 +201,9 @@ const CertificatesList = () => {
             <div className="text-md-start">
               <h4 className="mb-3">CSI DMCE</h4>
               <h6 className="my-2">Name : {certificate?.name}</h6>
-              <h6 className="my-2">Date : {formatDate(certificate?.date)}</h6>
+              <h6 className="my-2">
+                Date : {dayjs(certificate?.date).format("DD-MM-YYYY")}
+              </h6>
               <h6 className="my-2">Event : {event}</h6>
               <h6>Position : {certificate?.position}</h6>
             </div>
