@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
@@ -16,6 +16,7 @@ import {
 import dayjs from "dayjs";
 import { toPng } from "html-to-image";
 import EditIcon from "@mui/icons-material/Edit";
+import { StateContext } from "../../../context/StateContext";
 
 const style = {
   position: "absolute",
@@ -109,6 +110,9 @@ const htmlToImageConvert = (qr_code, certificate) => {
 
 const CertificatesList = () => {
   const { event_id } = useParams();
+
+  const { toggleLoading } = useContext(StateContext);
+
   const [certificates, setCertificates] = useState([]);
   const [event, setEvent] = useState("");
   const [open, setOpen] = useState(false);
@@ -117,13 +121,19 @@ const CertificatesList = () => {
 
   const qr_code = useRef(null);
 
-  const refreshCertificates = () => {
-    setRefCerti((prev) => !prev);
-  };
+  // const refreshCertificates = () => {
+  //   setRefCerti((prev) => !prev);
+  // };
 
   useEffect(() => {
     const controller = new AbortController();
-    fetchCertificates(event_id, controller, setCertificates, setEvent);
+    fetchCertificates(
+      event_id,
+      controller,
+      setCertificates,
+      setEvent,
+      toggleLoading
+    );
     return () => controller.abort();
   }, [refCerti]);
 
@@ -182,7 +192,8 @@ const CertificatesList = () => {
                   ) &&
                     (await DeleteCertificate(
                       params.row.id,
-                      refreshCertificates
+                      certificates,
+                      setCertificates
                     ));
                 })();
               }

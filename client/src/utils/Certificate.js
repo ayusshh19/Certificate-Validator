@@ -1,7 +1,25 @@
 import axios from "axios";
 import dayjs from "dayjs";
 
-const RegisterCertificate = async (register, setRegister, initialState) => {
+const removeCertificate = (certificates, setCertificates, certificate_id) => {
+  setCertificates(
+    certificates.filter((certificate) => certificate._id !== certificate_id)
+  );
+};
+
+const editCertificate = (certificates, setCertificates, certificate) => {
+  setCertificates(
+    certificates.map((c) =>
+      c._id === certificate._id ? { ...c, ...certificate } : c
+    )
+  );
+};
+
+export const RegisterCertificate = async (
+  register,
+  setRegister,
+  initialState
+) => {
   const { name, position, event } = register;
   if (!name.trim() || !position.trim() || !event.trim()) {
     setRegister({
@@ -24,22 +42,28 @@ const RegisterCertificate = async (register, setRegister, initialState) => {
   }
 };
 
-const DeleteCertificate = async (certificate_id, refreshCertificatesFlag) => {
+export const DeleteCertificate = async (
+  certificate_id,
+  certificates,
+  setCertificates
+) => {
   try {
     await axios.delete(`/api/certificate/delete/${certificate_id}`);
-    refreshCertificatesFlag();
+    removeCertificate(certificates, setCertificates, certificate_id);
   } catch (err) {
     console.log(err);
     alert(err.response?.data.error || err.message || err);
   }
 };
 
-const fetchCertificates = async (
+export const fetchCertificates = async (
   event_id,
   controller,
   setCertificates,
-  setEvent
+  setEvent,
+  toggleLoading
 ) => {
+  toggleLoading(true);
   try {
     const { data } = await axios.get(
       `/api/certificate/fetch/event/${event_id}`,
@@ -53,6 +77,5 @@ const fetchCertificates = async (
     if (err.name === "CanceledError") return;
     alert(err.response?.data.error || err.message || err);
   }
+  toggleLoading(false);
 };
-
-export { RegisterCertificate, DeleteCertificate, fetchCertificates };
