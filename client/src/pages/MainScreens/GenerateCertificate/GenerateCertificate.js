@@ -97,11 +97,18 @@ const GenerateCertificate = () => {
                   onChange={(e) => handleInputChange("year", e.target.value)}
                   label="Year"
                 >
-                  {generateYearOptions()?.map((year) => (
+                  {/* {generateYearOptions()?.map((year) => (
                     <MenuItem key={year} value={year}>
                       {year}
                     </MenuItem>
-                  ))}
+                  ))} */}
+                  {events?.map((years) => {
+                    return (
+                      <MenuItem key={years.year} value={years.year}>
+                        {years.year}
+                      </MenuItem>
+                    );
+                  })}
                 </Select>
               </FormControl>
             </div>
