@@ -158,13 +158,13 @@ const GenerateCertificate = () => {
                   }
                 >
                   {[
-                    "participant",
-                    "winner",
-                    "1st runner-up",
-                    "2nd runner-up",
+                    { name: "Participant", value: "0" },
+                    { name: "Winner", value: "1" },
+                    { name: "1st Runner-Up", value: "2" },
+                    { name: "2nd Runner-Up", value: "3" },
                   ].map((pos) => (
-                    <MenuItem key={pos} value={pos}>
-                      {pos}
+                    <MenuItem key={pos.value} value={pos.value}>
+                      {pos.name}
                     </MenuItem>
                   ))}
                 </Select>

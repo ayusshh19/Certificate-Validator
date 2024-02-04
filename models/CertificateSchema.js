@@ -19,11 +19,10 @@ const CertificateSchema = new Schema(
       lowercase: true,
     },
     position: {
-      type: String,
+      type: Number,
       required: [true, "position is required"],
       trim: true,
-      enum: ["participant", "winner", "1st runner-up", "2nd runner-up"],
-      lowercase: true,
+      enum: [0, 1, 2, 3],
     },
     date: {
       type: Date,

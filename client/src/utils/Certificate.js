@@ -1,7 +1,5 @@
 import axios from "axios";
 import dayjs from "dayjs";
-import { useContext } from "react";
-import { StateContext } from "../context/StateContext";
 
 const RegisterCertificate = async (register, setRegister, initialState) => {
   const { name, position, event } = register;
