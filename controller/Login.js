@@ -12,7 +12,7 @@ const Login = async (req, res, next) => {
     });
     res.send({
       message: "Login successful",
-      Authorization: token,
+      authorization: token,
     });
   } catch (err) {
     next(err);

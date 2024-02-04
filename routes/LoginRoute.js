@@ -14,7 +14,7 @@ router.post(
 
 router.get(
   "/token/verify",
-  header("token").trim().notEmpty().withMessage("token is required"),
+  header("authorization").trim().notEmpty().withMessage("token is required"),
   fieldHandler,
   TokenVerify
 );
