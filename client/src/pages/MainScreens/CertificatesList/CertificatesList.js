@@ -33,11 +33,11 @@ const columns = [
   {
     field: "uid",
     headerName: "Certificate Number",
-    width: 200,
+    width: 150,
     sortable: false,
   },
   { field: "name", headerName: "Name", width: 200 },
-  { field: "position", headerName: "Position", width: 100 },
+  { field: "position", headerName: "Position", width: 150 },
   {
     field: "date",
     headerName: "Date",
@@ -87,11 +87,12 @@ const columns = [
   },
 ];
 
-const generateRowsWithSerialNumber = (rows) => {
+const generateRowsWithSerialNumber = (rows, positionOption) => {
   return rows?.map((row, index) => ({
     ...row,
     serialNumber: index + 1,
     id: row._id,
+    position: positionOption[row.position].name,
   }));
 };
 
@@ -111,19 +112,14 @@ const htmlToImageConvert = (qr_code, certificate) => {
 const CertificatesList = () => {
   const { event_id } = useParams();
 
-  const { toggleLoading } = useContext(StateContext);
+  const { toggleLoading, positionOption } = useContext(StateContext);
 
   const [certificates, setCertificates] = useState([]);
   const [event, setEvent] = useState("");
   const [open, setOpen] = useState(false);
   const [certificate, setCertificate] = useState(null);
-  const [refCerti, setRefCerti] = useState(false);
 
   const qr_code = useRef(null);
-
-  // const refreshCertificates = () => {
-  //   setRefCerti((prev) => !prev);
-  // };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -135,7 +131,7 @@ const CertificatesList = () => {
       toggleLoading
     );
     return () => controller.abort();
-  }, [refCerti]);
+  }, [event_id]);
 
   return (
     <div>
@@ -167,7 +163,7 @@ const CertificatesList = () => {
             style={{
               borderRadius: "18px",
             }}
-            rows={generateRowsWithSerialNumber(certificates)}
+            rows={generateRowsWithSerialNumber(certificates, positionOption)}
             columns={columns}
             initialState={{
               pagination: {

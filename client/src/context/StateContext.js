@@ -38,6 +38,13 @@ const StateProvider = ({ children }) => {
     setMobileNav(state);
   };
 
+  const positionOption = [
+    { name: "Participant", value: "0" },
+    { name: "Winner", value: "1" },
+    { name: "1st Runner-Up", value: "2" },
+    { name: "2nd Runner-Up", value: "3" },
+  ];
+
   return (
     <StateContext.Provider
       value={{
@@ -53,6 +60,7 @@ const StateProvider = ({ children }) => {
         toggleMobileNav,
         mobileNav,
         toggleLoading,
+        positionOption
       }}
     >
       {children}

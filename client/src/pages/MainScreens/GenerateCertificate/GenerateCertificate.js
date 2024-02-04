@@ -34,7 +34,7 @@ const initialState = {
 };
 
 const GenerateCertificate = () => {
-  const { events, generateYearOptions, toggleMobileNav } =
+  const { events, generateYearOptions, positionOption, toggleMobileNav } =
     useContext(StateContext);
 
   const [register, setRegister] = useState(initialState);
@@ -97,11 +97,6 @@ const GenerateCertificate = () => {
                   onChange={(e) => handleInputChange("year", e.target.value)}
                   label="Year"
                 >
-                  {/* {generateYearOptions()?.map((year) => (
-                    <MenuItem key={year} value={year}>
-                      {year}
-                    </MenuItem>
-                  ))} */}
                   {events?.map((years) => {
                     return (
                       <MenuItem key={years.year} value={years.year}>
@@ -164,12 +159,7 @@ const GenerateCertificate = () => {
                     register.positionError ? "Position cannot be empty" : ""
                   }
                 >
-                  {[
-                    { name: "Participant", value: "0" },
-                    { name: "Winner", value: "1" },
-                    { name: "1st Runner-Up", value: "2" },
-                    { name: "2nd Runner-Up", value: "3" },
-                  ].map((pos) => (
+                  {positionOption.map((pos) => (
                     <MenuItem key={pos.value} value={pos.value}>
                       {pos.name}
                     </MenuItem>
