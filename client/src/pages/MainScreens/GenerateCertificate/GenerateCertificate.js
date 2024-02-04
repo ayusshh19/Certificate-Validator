@@ -40,11 +40,19 @@ const GenerateCertificate = () => {
   const [register, setRegister] = useState(initialState);
 
   const handleInputChange = (field, value) => {
-    setRegister({
-      ...register,
-      [field]: value,
-      [`${field}Error`]: false,
-    });
+    if (field === "name") {
+      setRegister({
+        ...register,
+        name: value,
+        nameError: false,
+      });
+    } else {
+      setRegister({
+        ...register,
+        [field]: value,
+        [`${field}Error`]: false,
+      });
+    }
   };
 
   return (
