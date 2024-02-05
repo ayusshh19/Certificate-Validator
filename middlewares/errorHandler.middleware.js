@@ -1,4 +1,4 @@
-const ErrorResponse = require("../utils/errorResponse");
+const ApiError = require("../utils/ApiError");
 
 const errorHandler = (err, req, res, next) => {
   try {
@@ -6,21 +6,18 @@ const errorHandler = (err, req, res, next) => {
 
     // Mongoose bad ObjectId
     if (err.name === "CastError")
-      throw new ErrorResponse(
+      throw new ApiError(
         err.message || "Resource not found. Invalid ObjectId",
         404
       );
     // Mongoose duplicate key
     if (err.code === 11000) {
-      throw new ErrorResponse(
-        err.message || "Duplicate field value entered",
-        409
-      );
+      throw new ApiError(err.message || "Duplicate field value entered", 409);
     }
     // Mongoose validation error
     if (err.name === "ValidationError") {
       const message = Object.values(err.errors)?.map((er) => er.message);
-      throw new ErrorResponse(message, 400);
+      throw new ApiError(message, 400);
     }
 
     res.status(err.statusCode || 500).json({

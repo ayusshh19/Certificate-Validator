@@ -1,4 +1,4 @@
-const errorResponse = require("../utils/errorResponse");
+const errorResponse = require("../utils/ApiError");
 const EventSchema = require("../models/EventSchema");
 const CertificateSchema = require("../models/CertificateSchema");
 const ShortUniqueId = require("short-unique-id");

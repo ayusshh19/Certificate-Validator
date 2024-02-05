@@ -1,4 +1,4 @@
-const errorResponse = require("../utils/errorResponse");
+const ApiError = require("../utils/ApiError");
 const EventSchema = require("../models/EventSchema");
 
 const Register = async (req, res, next) => {
@@ -8,7 +8,7 @@ const Register = async (req, res, next) => {
       name,
       year,
     });
-    if (event) throw new errorResponse("event already registered", 400);
+    if (event) throw new ApiError("event already registered", 400);
     const response = await EventSchema.create({
       name,
       year,

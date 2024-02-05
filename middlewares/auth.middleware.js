@@ -1,18 +1,20 @@
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET, USERNAME, PASSWORD } = require("../config");
-const ErrorResponse = require("../utils/errorResponse");
+const ApiError = require("../utils/ApiError");
 
 const tokenVerify = (req, res, next) => {
   try {
-    const token = req.headers.authorization;
-    if (!token) throw new ErrorResponse("Token not found", 401);
+    const token =
+      req.cookies?.access_token ||
+      req.header("Authorization").replace("Bearer ", "");
+    if (!token) throw new ApiError("Token not found", 401);
     const decoded = jwt.verify(token, JWT_SECRET);
     if (decoded.username !== USERNAME || decoded.password !== PASSWORD)
-      throw new ErrorResponse("Invalid token", 401);
+      throw new ApiError("Invalid token", 401);
     next();
   } catch (err) {
     if (err.name === "TokenExpiredError")
-      return next(new ErrorResponse("Token expired", 401));
+      return next(new ApiError("Token expired", 401));
     next(err);
   }
 };
