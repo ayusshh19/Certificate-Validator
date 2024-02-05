@@ -1,15 +1,15 @@
 const ApiError = require("../utils/ApiError");
-const EventSchema = require("../models/EventSchema");
+const EventModel = require("../models/event.model");
 
 const Register = async (req, res, next) => {
   try {
     const { name, year } = req.body;
-    const event = await EventSchema.findOne({
+    const event = await EventModel.findOne({
       name,
       year,
     });
     if (event) throw new ApiError("event already registered", 400);
-    const response = await EventSchema.create({
+    const response = await EventModel.create({
       name,
       year,
     });
@@ -22,7 +22,7 @@ const Register = async (req, res, next) => {
 const Delete = async (req, res, next) => {
   try {
     const { event_id } = req.params;
-    await EventSchema.findByIdAndDelete(event_id);
+    await EventModel.findByIdAndDelete(event_id);
     res.send("event deleted");
   } catch (err) {
     next(err);
@@ -32,7 +32,7 @@ const Delete = async (req, res, next) => {
 const Fetch = async (req, res, next) => {
   try {
     const { event_id } = req.params;
-    const event = await EventSchema.findById(event_id).lean();
+    const event = await EventModel.findById(event_id).lean();
     res.json(event);
   } catch (err) {
     next(err);
@@ -41,7 +41,7 @@ const Fetch = async (req, res, next) => {
 
 const FetchYear = async (req, res, next) => {
   try {
-    const events = await EventSchema.aggregate([
+    const events = await EventModel.aggregate([
       {
         $group: {
           _id: "$year",
@@ -67,7 +67,7 @@ const FetchYear = async (req, res, next) => {
 
 const FetchAll = async (req, res, next) => {
   try {
-    const events = await EventSchema.find()
+    const events = await EventModel.find()
       .sort({ year: -1 })
       .select(["_id", "name"]);
     res.json(events);
@@ -79,7 +79,7 @@ const FetchAll = async (req, res, next) => {
 const Update = async (req, res, next) => {
   try {
     const { event_id } = req.params;
-    await EventSchema.findByIdAndUpdate(event_id, req.body);
+    await EventModel.findByIdAndUpdate(event_id, req.body);
     res.send("Event updated");
   } catch (err) {
     next(err);

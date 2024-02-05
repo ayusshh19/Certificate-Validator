@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { body, header } = require("express-validator");
-const fieldHandler = require("../middlewares/fieldHandler");
+const fieldHandler = require("../middlewares/fieldHandler.middleware");
 const { Login, TokenVerify } = require("../controllers/index.controller");
 
 router.post(
