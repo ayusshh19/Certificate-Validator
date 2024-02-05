@@ -97,7 +97,14 @@ const generateRowsWithSerialNumber = (rows, positionOption) => {
 };
 
 const htmlToImageConvert = (qr_code, certificate) => {
-  toPng(qr_code.current, { cacheBust: false })
+  toPng(qr_code.current, {
+    cacheBust: false,
+    width: 200, // Adjust the width to match QR code size
+    height: 200, // Adjust the height to match QR code size
+    style: {
+      transform: "none", // Reset any transform styles
+    },
+  })
     .then((dataUrl) => {
       const link = document.createElement("a");
       link.download = certificate?.name + "-" + certificate?.uid + ".png";
@@ -207,7 +214,9 @@ const CertificatesList = () => {
           <div className="d-flex flex-column flex-md-row align-items-center align-items-md-start justify-content-center h-100 p-4">
             <div className="text-md-start">
               <h4 className="mb-3">CSI DMCE</h4>
-              <h6 className="my-2">Name : {certificate?.name}</h6>
+              <h6 className="my-2" style={{ textTransform: "capitalize" }}>
+                Name : {certificate?.name}
+              </h6>
               <h6 className="my-2">
                 Date : {dayjs(certificate?.date).format("DD-MM-YYYY")}
               </h6>
@@ -221,16 +230,29 @@ const CertificatesList = () => {
                 width: "100%",
                 maxWidth: "200px",
                 backgroundColor: "white",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
               }}
             >
               <QRCode
-                size={256}
+                size={200} // Adjust the size as needed
                 style={{ height: "auto", maxWidth: "100%", width: "100%" }}
                 value={certificate?.url || ""}
-                viewBox={`0 0 256 256`}
+                viewBox={`0 0 200 200`} // Adjust the viewBox dimensions
               />
+
               <h6 className="mt-2 text-center">{certificate?.uid}</h6>
             </div>
+          </div>{" "}
+          <div className="mt-3 text-center">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => htmlToImageConvert(qr_code, certificate)}
+            >
+              Download QR Code
+            </Button>
           </div>
           <section class="spikes"></section>
         </div>

@@ -4,7 +4,7 @@ import { fetchEvents } from "../utils/Event";
 export const StateContext = createContext();
 
 const StateProvider = ({ children }) => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [alerts, setAlerts] = useState([]);
   const [events, setEvents] = useState([]);
@@ -60,7 +60,7 @@ const StateProvider = ({ children }) => {
         toggleMobileNav,
         mobileNav,
         toggleLoading,
-        positionOption
+        positionOption,
       }}
     >
       {children}
