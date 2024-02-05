@@ -207,7 +207,9 @@ const CertificatesList = () => {
           <div className="d-flex flex-column flex-md-row align-items-center align-items-md-start justify-content-center h-100 p-4">
             <div className="text-md-start">
               <h4 className="mb-3">CSI DMCE</h4>
-              <h6 className="my-2">Name : {certificate?.name}</h6>
+              <h6 className="my-2" style={{ textTransform: "capitalize" }}>
+                Name : {certificate?.name}
+              </h6>
               <h6 className="my-2">
                 Date : {dayjs(certificate?.date).format("DD-MM-YYYY")}
               </h6>
