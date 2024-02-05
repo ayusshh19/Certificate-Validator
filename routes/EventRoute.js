@@ -9,7 +9,7 @@ const {
   FetchYear: FetchYearEvent,
   FetchAll: FetchAllEvent,
   Update: UpdateEvent,
-} = require("../controller/Event");
+} = require("../controllers/event.controller");
 
 router.post(
   "/register",

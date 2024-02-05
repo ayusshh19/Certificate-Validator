@@ -9,7 +9,7 @@ const {
   FetchEvent: FetchEventCertificate,
   Update: UpdateCertificate,
   Verify: VerifyCertificate,
-} = require("../controller/Certificate");
+} = require("../controllers/certificate.controller");
 
 router.post(
   "/register",
