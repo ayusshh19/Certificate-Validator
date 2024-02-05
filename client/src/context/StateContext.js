@@ -4,7 +4,7 @@ import { fetchEvents } from "../utils/Event";
 export const StateContext = createContext();
 
 const StateProvider = ({ children }) => {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [alerts, setAlerts] = useState([]);
   const [events, setEvents] = useState([]);

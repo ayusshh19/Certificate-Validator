@@ -123,6 +123,7 @@ const CertificatesList = () => {
 
   const [certificates, setCertificates] = useState([]);
   const [event, setEvent] = useState("");
+  const [editModal, setEditModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [certificate, setCertificate] = useState(null);
 
@@ -188,16 +189,23 @@ const CertificatesList = () => {
                   url: `${window.location.origin}/verify-certificate/${params.row.uid}`,
                 });
                 setOpen(true);
+              } else if (params.field === "edit") {
+                setCertificate({
+                  ...params.row,
+                });
+                setEditModal(true); // Open the edit modal
               } else if (params.field === "delete") {
                 (async () => {
-                  window.confirm(
+                  const confirmed = window.confirm(
                     "Are you sure you want to delete this certificate?"
-                  ) &&
-                    (await DeleteCertificate(
+                  );
+                  if (confirmed) {
+                    await DeleteCertificate(
                       params.row.id,
                       certificates,
                       setCertificates
-                    ));
+                    );
+                  }
                 })();
               }
             }}
@@ -255,6 +263,19 @@ const CertificatesList = () => {
             </Button>
           </div>
           <section class="spikes"></section>
+        </div>
+      </Modal>
+
+      {/* EDIT MODAL */}
+      <Modal
+        open={editModal}
+        onClose={() => setEditModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <div style={style} className="event-modal p-3">
+          <h4>Edit Certificate</h4>
+          <h1>{certificate?.name}</h1>
         </div>
       </Modal>
     </div>
