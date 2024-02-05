@@ -2,9 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const errorHandler = require("./middlewares/errorHandler.middleware");
 const auth = require("./middlewares/auth.middleware");
-const LoginRoute = require("./routes/index.routes");
-const EventRoute = require("./routes/event.routes");
-const CertificateRoute = require("./routes/certificate.routes");
+const IndexRouter = require("./routes/index.routes");
+const EventRouter = require("./routes/event.routes");
+const CertificateRouter = require("./routes/certificate.routes");
 const { CORS_ORIGIN } = require("./config");
 
 const app = express();
@@ -18,12 +18,16 @@ app.use(
 );
 app.use(express.urlencoded({ extended: false }));
 
-app.use("/api", LoginRoute);
+app.use("/api", IndexRouter);
 
 // app.use(auth);
 
-app.use("/api/event", EventRoute);
-app.use("/api/certificate", CertificateRoute);
+app.use("/api/event", EventRouter);
+app.use("/api/certificate", CertificateRouter);
+
+app.get("/", (req, res) => {
+  res.send("Welcome to the Certificate Generator");
+});
 
 app.use(errorHandler);
 
