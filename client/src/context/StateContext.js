@@ -1,16 +1,16 @@
 import React, { useState, createContext, useEffect } from "react";
 import { fetchEvents } from "../utils/Event";
 import axios from "axios";
+import { set } from "mongoose";
 
 export const StateContext = createContext();
 
 const StateProvider = ({ children }) => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(
+    localStorage.getItem("accessToken") ? true : false
+  );
   const [loading, setLoading] = useState(false);
   const [alerts, setAlerts] = useState([]);
-  const [accessToken, setAccessToken] = useState(
-    localStorage.getItem("accessToken")
-  );
   const [events, setEvents] = useState([]);
   const [fetchFlag, setFetchFlag] = useState(true);
   const [mobileNav, setMobileNav] = useState(false);
@@ -20,12 +20,17 @@ const StateProvider = ({ children }) => {
   };
 
   const setToken = (newToken) => {
-    setAccessToken(newToken);
     localStorage.setItem("accessToken", newToken);
+    setIsLogin(true);
   };
 
+  const removeToken = () => {
+    localStorage.removeItem("accessToken");
+    setIsLogin(false);
+  }
+
   useEffect(() => {
-    console.log("AuthContext: useEffect", accessToken);
+    const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
       axios.defaults.headers.common["Authorization"] = "Bearer " + accessToken;
       localStorage.setItem("accessToken", accessToken);
@@ -35,13 +40,13 @@ const StateProvider = ({ children }) => {
       localStorage.removeItem("accessToken");
       setIsLogin(false);
     }
-  }, [accessToken]);
+  }, [isLogin]);
 
   useEffect(() => {
     const controller = new AbortController();
-    fetchEvents(controller, setEvents, toggleLoading);
+    fetchEvents(controller, setEvents, toggleLoading, removeToken);
     return () => controller.abort();
-  }, [fetchFlag]);
+  }, [isLogin, fetchFlag]);
 
   const generateYearOptions = () => {
     const currentYear = new Date().getFullYear();
@@ -76,8 +81,8 @@ const StateProvider = ({ children }) => {
         setLoading,
         alerts,
         setAlerts,
-        accessToken,
         setToken,
+        removeToken,
         events,
         generateYearOptions,
         refreshFlag,

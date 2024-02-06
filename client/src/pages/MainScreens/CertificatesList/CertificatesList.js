@@ -117,7 +117,8 @@ const htmlToImageConvert = (qr_code, certificate) => {
 const CertificatesList = () => {
   const { event_id } = useParams();
 
-  const { toggleLoading, positionOption } = useContext(StateContext);
+  const { toggleLoading, positionOption, removeToken } =
+    useContext(StateContext);
 
   const [certificates, setCertificates] = useState([]);
   const [event, setEvent] = useState("");
@@ -135,7 +136,8 @@ const CertificatesList = () => {
       controller,
       setCertificates,
       setEvent,
-      toggleLoading
+      toggleLoading,
+      removeToken
     );
     return () => controller.abort();
   }, [event_id, fetchFlag]);

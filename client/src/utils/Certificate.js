@@ -61,7 +61,8 @@ export const fetchCertificates = async (
   controller,
   setCertificates,
   setEvent,
-  toggleLoading
+  toggleLoading,
+  removeToken
 ) => {
   toggleLoading(true);
   try {
@@ -75,8 +76,11 @@ export const fetchCertificates = async (
     setEvent(data.data.event || "");
     toggleLoading(false);
   } catch (err) {
-    if (err.name === "CanceledError") return;
     toggleLoading(false);
+    if (err.name === "CanceledError") return;
+    if (err.response?.data.name === "Unauthorized") {
+      return removeToken();
+    }
     alert(err.response?.data.message || err.message || err);
   }
 };

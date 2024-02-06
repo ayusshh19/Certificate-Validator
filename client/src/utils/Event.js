@@ -30,9 +30,13 @@ const DeleteEvent = async (e, event_id, refreshFlag) => {
   }
 };
 
-const fetchEvents = async (controller, setEvents, toggleLoading) => {
+const fetchEvents = async (
+  controller,
+  setEvents,
+  toggleLoading,
+  removeToken
+) => {
   toggleLoading(true);
-  console.log(axios.defaults.headers.common["Authorization"])
   try {
     const { data } = await axios.get("/api/event/fetch", {
       signal: controller.signal,
@@ -40,8 +44,11 @@ const fetchEvents = async (controller, setEvents, toggleLoading) => {
     setEvents(data.data);
     toggleLoading(false);
   } catch (err) {
-    if (err.name === "CanceledError") return;
     toggleLoading(false);
+    if (err.name === "CanceledError") return;
+    if (err.response?.data.name === "Unauthorized") {
+      return removeToken();
+    }
     alert(err.response?.data.message || err.message || err);
   }
 };
