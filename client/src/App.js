@@ -2,12 +2,11 @@ import "./App.css";
 import MainScreen from "./pages/MainScreens/MainScreen";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Auth from "./pages/AuthScreens/Auth";
-import StateProvider from "./context/StateContext";
 import { useContext } from "react";
-import { AuthContext } from "./context/AuthContext";
+import { StateContext } from "./context/StateContext";
 
 function App() {
-  const { loading, isLogin } = useContext(AuthContext);
+  const { loading, isLogin } = useContext(StateContext);
 
   return (
     <div className="App">
@@ -19,14 +18,7 @@ function App() {
       <Router>
         <Routes>
           {isLogin ? (
-            <Route
-              path="/*"
-              element={
-                <StateProvider>
-                  <MainScreen />
-                </StateProvider>
-              }
-            />
+            <Route path="/*" element={<MainScreen />} />
           ) : (
             <Route path="/*" element={<Auth />} />
           )}

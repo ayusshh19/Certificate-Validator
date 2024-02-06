@@ -12,8 +12,7 @@ const Login = async (login, setLogin, setToken) => {
   try {
     const { data } = await axios.post("/api/login", login);
     const token = data.data.accessToken;
-    setToken("accessToken", token);
-    localStorage.setItem("accessToken", token);
+    setToken(token);
   } catch (err) {
     alert(err.response?.data.message || err.message || err);
   }

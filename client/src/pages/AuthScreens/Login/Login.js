@@ -2,10 +2,10 @@ import React, { useState, useContext } from "react";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { Login as LoginFunction } from "../../../utils/Index";
-import { AuthContext } from "../../../context/AuthContext";
+import { StateContext } from "../../../context/StateContext";
 
 const Login = () => {
-  const { setToken } = useContext(AuthContext);
+  const { setToken } = useContext(StateContext);
 
   const [login, setLogin] = useState({
     username: "csi",
