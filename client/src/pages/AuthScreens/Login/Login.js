@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { Login as LoginFunction } from "../../../utils/Index";
+import { AuthContext } from "../../../context/AuthContext";
 
 const Login = () => {
+  const { setToken } = useContext(AuthContext);
+
   const [login, setLogin] = useState({
     username: "csi",
     password: "password",
@@ -16,7 +19,9 @@ const Login = () => {
         variant="contained"
         aria-label="outlined primary button group"
       >
-        <Button onClick={() => LoginFunction(login, setLogin)}>Login</Button>
+        <Button onClick={() => LoginFunction(login, setLogin, setToken)}>
+          Login
+        </Button>
       </ButtonGroup>
     </div>
   );

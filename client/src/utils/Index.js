@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const Login = async (login, setLogin) => {
+const Login = async (login, setLogin, setToken) => {
   const { username, password } = login;
   if (!username.trim() || !password.trim()) {
     return setLogin({
@@ -11,7 +11,9 @@ const Login = async (login, setLogin) => {
   }
   try {
     const { data } = await axios.post("/api/login", login);
-    console.log(data);
+    const token = data.data.accessToken;
+    setToken("accessToken", token);
+    localStorage.setItem("accessToken", token);
   } catch (err) {
     alert(err.response?.data.message || err.message || err);
   }

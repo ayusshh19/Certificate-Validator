@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
-import StateProvider from "./context/StateContext";
+import AuthProvider from "./context/AuthContext";
 import axios from "axios";
 
 // const SERVER_URL = "http://localhost:8000";
@@ -13,8 +13,8 @@ axios.defaults.baseURL = SERVER_URL;
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <StateProvider>
+    <AuthProvider>
       <App />
-    </StateProvider>
+    </AuthProvider>
   </React.StrictMode>
 );
