@@ -3,10 +3,10 @@ import MainScreen from "./pages/MainScreens/MainScreen";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Auth from "./pages/AuthScreens/Auth";
 import { useContext } from "react";
-import { StateContext } from "./context/StateContext";
+import { AuthContext } from "./context/AuthContext";
 
 function App() {
-  const { loading, isLogin } = useContext(StateContext);
+  const { loading, isLogin } = useContext(AuthContext);
 
   return (
     <div className="App">
