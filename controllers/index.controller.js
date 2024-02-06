@@ -25,7 +25,7 @@ const Login = async (req, res, next) => {
 const TokenVerify = (req, res, next) => {
   try {
     const token =
-      req.cookies.accessToken ||
+      req.cookies?.accessToken ||
       req.header("Authorization").replace("Bearer ", "");
 
     if (!token) {
@@ -39,8 +39,10 @@ const TokenVerify = (req, res, next) => {
 
     return res.json(new ApiResponse(null, "Token verified successfully", 200));
   } catch (err) {
-    if (err.name === "TokenExpiredError")
+    if (err.name === "TokenExpiredError") {
       return next(new ApiError("Token expired", 401, "Unauthorized"));
+    }
+    
     next(err);
   }
 };
