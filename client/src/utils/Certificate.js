@@ -7,14 +7,6 @@ const removeCertificate = (certificates, setCertificates, certificate_id) => {
   );
 };
 
-const editCertificate = (certificates, setCertificates, certificate) => {
-  setCertificates(
-    certificates.map((c) =>
-      c._id === certificate._id ? { ...c, ...certificate } : c
-    )
-  );
-};
-
 export const RegisterCertificate = async (
   register,
   setRegister,
@@ -53,6 +45,22 @@ export const DeleteCertificate = async (
   } catch (err) {
     alert(err.response?.data.message || err.message || err);
     refreshFlag();
+  }
+};
+
+export const editCertificate = async (refreshFlag, toggleLoading, editData) => {
+  toggleLoading(true);
+  try {
+    const { data } = await axios.put(`/api/certificate/update/${editData.id}`, {
+      name: editData.name,
+      position: editData.position,
+    });
+    toggleLoading(false);
+    refreshFlag();
+  } catch (err) {
+    if (err.name === "CanceledError") return;
+    toggleLoading(false);
+    alert(err.response?.data.message || err.message || err);
   }
 };
 

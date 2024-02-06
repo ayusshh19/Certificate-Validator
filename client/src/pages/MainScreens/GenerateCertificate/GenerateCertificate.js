@@ -34,8 +34,7 @@ const initialState = {
 };
 
 const GenerateCertificate = () => {
-  const { events, positionOption, toggleMobileNav } =
-    useContext(StateContext);
+  const { events, positionOption, toggleMobileNav } = useContext(StateContext);
 
   const [register, setRegister] = useState(initialState);
 
