@@ -1,19 +1,26 @@
 const ApiError = require("../utils/ApiError");
+const ApiResponse = require("../utils/ApiResponse");
 const EventModel = require("../models/event.model");
 
 const Register = async (req, res, next) => {
   try {
     const { name, year } = req.body;
+
     const event = await EventModel.findOne({
       name,
       year,
     });
-    if (event) throw new ApiError("event already registered", 400);
+    if (event) {
+      throw new ApiError("Event already registered", 400, "BadRequest");
+    }
+
     const response = await EventModel.create({
       name,
       year,
     });
-    res.send(response);
+    return res.json(
+      new ApiResponse(response, "Event registered successfully", 201)
+    );
   } catch (err) {
     next(err);
   }
@@ -22,8 +29,9 @@ const Register = async (req, res, next) => {
 const Delete = async (req, res, next) => {
   try {
     const { event_id } = req.params;
+
     await EventModel.findByIdAndDelete(event_id);
-    res.send("event deleted");
+    return res.json(new ApiResponse(null, "Event deleted successfully", 200));
   } catch (err) {
     next(err);
   }
@@ -32,8 +40,9 @@ const Delete = async (req, res, next) => {
 const Fetch = async (req, res, next) => {
   try {
     const { event_id } = req.params;
+
     const event = await EventModel.findById(event_id).lean();
-    res.json(event);
+    return res.json(new ApiResponse(event, "Event fetched successfully", 200));
   } catch (err) {
     next(err);
   }
@@ -59,7 +68,9 @@ const FetchYear = async (req, res, next) => {
         $sort: { year: -1 },
       },
     ]);
-    res.json(events);
+    return res.json(
+      new ApiResponse(events, "Events fetched successfully", 200)
+    );
   } catch (err) {
     next(err);
   }
@@ -70,7 +81,9 @@ const FetchAll = async (req, res, next) => {
     const events = await EventModel.find()
       .sort({ year: -1 })
       .select(["_id", "name"]);
-    res.json(events);
+    return res.json(
+      new ApiResponse(events, "Events fetched successfully", 200)
+    );
   } catch (err) {
     next(err);
   }
@@ -79,8 +92,9 @@ const FetchAll = async (req, res, next) => {
 const Update = async (req, res, next) => {
   try {
     const { event_id } = req.params;
+
     await EventModel.findByIdAndUpdate(event_id, req.body);
-    res.send("Event updated");
+    return res.json(new ApiResponse(null, "Event updated successfully", 200));
   } catch (err) {
     next(err);
   }
