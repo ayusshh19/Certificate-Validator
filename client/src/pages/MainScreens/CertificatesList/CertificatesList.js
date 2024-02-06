@@ -132,7 +132,7 @@ const CertificatesList = () => {
   const [editModal, setEditModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [certificate, setCertificate] = useState(null);
-  const [editData, setEditData] = useState({
+  const [editCertificate, setEditCertificate] = useState({
     id: "",
     name: "",
     position: "",
@@ -367,7 +367,8 @@ const CertificatesList = () => {
                   certificates,
                   setCertificates,
                   editCertificate,
-                  refreshFlag
+                  refreshFlag,
+                  setEditModal
                 )
               }
             >

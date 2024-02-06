@@ -98,7 +98,8 @@ export const UpdateCertificate = async (
   certificates,
   setCertificates,
   newCertificate,
-  refreshFlag
+  refreshFlag,
+  setEditModal
 ) => {
   try {
     editCertificate(certificates, setCertificates, newCertificate);
@@ -114,4 +115,5 @@ export const UpdateCertificate = async (
     alert(err.response?.data.message || err.message || err);
     refreshFlag();
   }
+  setEditModal(false);
 };
