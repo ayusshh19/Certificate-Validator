@@ -22,29 +22,4 @@ const Login = async (req, res, next) => {
   }
 };
 
-const TokenVerify = (req, res, next) => {
-  try {
-    const token =
-      req.cookies?.accessToken ||
-      req.header("Authorization").replace("Bearer ", "");
-
-    if (!token) {
-      throw new ApiError("Token not found", 401, "Unauthorized");
-    }
-
-    const decoded = jwt.verify(token, JWT_SECRET);
-    if (decoded.username !== USERNAME || decoded.password !== PASSWORD) {
-      throw new ApiError("Invalid token", 401, "Unauthorized");
-    }
-
-    return res.json(new ApiResponse(null, "Token verified successfully", 200));
-  } catch (err) {
-    if (err.name === "TokenExpiredError") {
-      return next(new ApiError("Token expired", 401, "Unauthorized"));
-    }
-    
-    next(err);
-  }
-};
-
-module.exports = { Login, TokenVerify };
+module.exports = { Login };
