@@ -102,7 +102,6 @@ export const UpdateCertificate = async (
   setEditModal
 ) => {
   try {
-    editCertificate(certificates, setCertificates, newCertificate);
     const { data } = await axios.put(
       `/api/certificate/update/${newCertificate.id}`,
       {
@@ -110,6 +109,7 @@ export const UpdateCertificate = async (
         position: newCertificate.position,
       }
     );
+    editCertificate(certificates, setCertificates, newCertificate);
     console.log(data);
   } catch (err) {
     alert(err.response?.data.message || err.message || err);
