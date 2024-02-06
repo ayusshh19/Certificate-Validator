@@ -32,6 +32,7 @@ const DeleteEvent = async (e, event_id, refreshFlag) => {
 
 const fetchEvents = async (controller, setEvents, toggleLoading) => {
   toggleLoading(true);
+  console.log(axios.defaults.headers.common["Authorization"])
   try {
     const { data } = await axios.get("/api/event/fetch", {
       signal: controller.signal,

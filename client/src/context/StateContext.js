@@ -1,15 +1,41 @@
 import React, { useState, createContext, useEffect } from "react";
-import { AuthContext } from "./AuthContext";
 import { fetchEvents } from "../utils/Event";
+import axios from "axios";
 
 export const StateContext = createContext();
 
 const StateProvider = ({ children }) => {
+  const [isLogin, setIsLogin] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [alerts, setAlerts] = useState([]);
+  const [accessToken, setAccessToken] = useState(
+    localStorage.getItem("accessToken")
+  );
   const [events, setEvents] = useState([]);
   const [fetchFlag, setFetchFlag] = useState(true);
   const [mobileNav, setMobileNav] = useState(false);
 
-  const { toggleLoading } = React.useContext(AuthContext);
+  const toggleLoading = (state) => {
+    setLoading(state);
+  };
+
+  const setToken = (newToken) => {
+    setAccessToken(newToken);
+    localStorage.setItem("accessToken", newToken);
+  };
+
+  useEffect(() => {
+    console.log("AuthContext: useEffect", accessToken);
+    if (accessToken) {
+      axios.defaults.headers.common["Authorization"] = "Bearer " + accessToken;
+      localStorage.setItem("accessToken", accessToken);
+      setIsLogin(true);
+    } else {
+      delete axios.defaults.headers.common["Authorization"];
+      localStorage.removeItem("accessToken");
+      setIsLogin(false);
+    }
+  }, [accessToken]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -44,6 +70,14 @@ const StateProvider = ({ children }) => {
   return (
     <StateContext.Provider
       value={{
+        isLogin,
+        setIsLogin,
+        loading,
+        setLoading,
+        alerts,
+        setAlerts,
+        accessToken,
+        setToken,
         events,
         generateYearOptions,
         refreshFlag,
