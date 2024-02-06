@@ -44,14 +44,15 @@ export const RegisterCertificate = async (
 export const DeleteCertificate = async (
   certificate_id,
   certificates,
-  setCertificates
+  setCertificates,
+  refreshFlag
 ) => {
   try {
-    await axios.delete(`/api/certificate/delete/${certificate_id}`);
     removeCertificate(certificates, setCertificates, certificate_id);
+    await axios.delete(`/api/certificate/delete/${certificate_id}`);
   } catch (err) {
-    console.log(err);
     alert(err.response?.data.message || err.message || err);
+    refreshFlag();
   }
 };
 

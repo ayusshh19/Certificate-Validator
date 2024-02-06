@@ -78,11 +78,9 @@ const columns = [
     filterable: false,
     width: 60,
     renderCell: (params) => (
-      <>
-        <IconButton aria-label="delete" color="error">
-          <DeleteIcon />
-        </IconButton>
-      </>
+      <IconButton aria-label="delete" color="error">
+        <DeleteIcon />
+      </IconButton>
     ),
   },
 ];
@@ -123,6 +121,7 @@ const CertificatesList = () => {
 
   const [certificates, setCertificates] = useState([]);
   const [event, setEvent] = useState("");
+  const [fetchFlag, setFetchFlag] = useState(true);
   const [editModal, setEditModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [certificate, setCertificate] = useState(null);
@@ -139,7 +138,11 @@ const CertificatesList = () => {
       toggleLoading
     );
     return () => controller.abort();
-  }, [event_id]);
+  }, [event_id, fetchFlag]);
+
+  const refreshFlag = () => {
+    setFetchFlag((prev) => !prev);
+  };
 
   return (
     <div>
@@ -203,7 +206,8 @@ const CertificatesList = () => {
                     await DeleteCertificate(
                       params.row.id,
                       certificates,
-                      setCertificates
+                      setCertificates,
+                      refreshFlag
                     );
                   }
                 })();
