@@ -4,14 +4,14 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./Dashboard/Dashboard";
 import GenerateCertificate from "./GenerateCertificate/GenerateCertificate.js";
 import CertificatesList from "./CertificatesList/CertificatesList.js";
-import MobileNaigation from "../../components/MobileNavigation/MobileNavigation";
+import MobileNavigation from "../../components/MobileNavigation/MobileNavigation";
 
 const MainScreen = () => {
   return (
     <div>
       <div className="container-fluid p-0 m-0 mainscreen">
         <div className="d-block d-md-none">
-          <MobileNaigation />
+          <MobileNavigation />
         </div>
         <div className="row m-0 p-0">
           <div

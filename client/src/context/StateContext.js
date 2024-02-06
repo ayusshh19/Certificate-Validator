@@ -1,7 +1,6 @@
 import React, { useState, createContext, useEffect } from "react";
 import { fetchEvents } from "../utils/Event";
 import axios from "axios";
-import { set } from "mongoose";
 
 export const StateContext = createContext();
 

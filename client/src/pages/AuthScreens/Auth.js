@@ -10,6 +10,7 @@ const Auth = () => (
     <Route path="/verify-certificate" element={<VerifyCertificateHome />} />
     <Route path="/verify-certificate/:id" element={<VerifyCertificate />} />
     <Route path="/login" element={<Login />} />
+    <Route path="*" element={<Navigate to="/login" />} />
   </Routes>
 );
 
