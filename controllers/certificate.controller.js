@@ -10,7 +10,7 @@ const uidGenerator = async () => {
   try {
     const uid = await randomUUID();
 
-    const certificate = await CertificateSchema.findOne({ uid });
+    const certificate = await CertificateModel.findOne({ uid });
     return certificate ? uidGenerator() : uid;
   } catch (err) {
     throw new ApiError(
