@@ -12,11 +12,17 @@ import QRCode from "react-qr-code";
 import {
   DeleteCertificate,
   fetchCertificates,
+  editCertificate,
 } from "../../../utils/Certificate";
 import dayjs from "dayjs";
 import { toPng } from "html-to-image";
 import EditIcon from "@mui/icons-material/Edit";
 import { StateContext } from "../../../context/StateContext";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
 
 const style = {
   position: "absolute",
@@ -117,7 +123,7 @@ const htmlToImageConvert = (qr_code, certificate) => {
 const CertificatesList = () => {
   const { event_id } = useParams();
 
-  const { toggleLoading, positionOption } = useContext(StateContext);
+  const { toggleLoading, positionOption, events } = useContext(StateContext);
 
   const [certificates, setCertificates] = useState([]);
   const [event, setEvent] = useState("");
@@ -125,8 +131,26 @@ const CertificatesList = () => {
   const [editModal, setEditModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [certificate, setCertificate] = useState(null);
+  const [editData, setEditData] = useState({
+    name: "",
+    position: "",
+  });
 
   const qr_code = useRef(null);
+
+  const handleInputChange = (field, value) => {
+    if (field === "name") {
+      setEditData({
+        ...editData,
+        name: value,
+      });
+    } else {
+      setEditData({
+        ...editData,
+        [field]: value,
+      });
+    }
+  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -193,10 +217,17 @@ const CertificatesList = () => {
                 });
                 setOpen(true);
               } else if (params.field === "edit") {
-                setCertificate({
-                  ...params.row,
+                positionOption.map((pos) => {
+                  if (pos.name === params.row.position) {
+                    params.row.position = pos.value;
+                  }
                 });
-                setEditModal(true); // Open the edit modal
+                setEditData({
+                  id: params.row.id,
+                  name: params.row.name,
+                  position: params.row.position,
+                });
+                setEditModal(true);
               } else if (params.field === "delete") {
                 (async () => {
                   const confirmed = window.confirm(
@@ -277,9 +308,70 @@ const CertificatesList = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <div style={style} className="event-modal p-3">
+        <div
+          style={{
+            ...style,
+            minWidth: "25vw",
+            width: "100%",
+            maxWidth: "300px",
+          }}
+          className="event-modal p-3"
+        >
           <h4>Edit Certificate</h4>
-          <h1>{certificate?.name}</h1>
+          <div className="my-3">
+            <TextField
+              style={{ width: "100%" }}
+              id="standard-basic"
+              label="Name"
+              variant="standard"
+              value={editData.name}
+              onChange={(e) => handleInputChange("name", e.target.value)}
+            />
+            <FormControl
+              variant="standard"
+              sx={{ minWidth: 120, width: "100%" }}
+              className="mt-3"
+            >
+              <InputLabel id="demo-simple-select-standard-label">
+                Postion
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-standard-label"
+                id="demo-simple-select-standard"
+                value={editData.position || ""}
+                onChange={(e) => handleInputChange("position", e.target.value)}
+                label="Position"
+              >
+                {positionOption.map((pos) => (
+                  <MenuItem key={pos.value} value={pos.value}>
+                    {pos.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+          <div className="mt-4 w-100 d-flex align-items-center justify-content-center">
+            <Button
+              disableElevation
+              variant="contained"
+              style={{
+                borderRadius: "12px",
+                padding: "10px 50px",
+                width: "100%",
+              }}
+              onClick={async () => {
+                await editCertificate(
+                  certificates,
+                  setCertificates,
+                  refreshFlag,
+                  toggleLoading,
+                  editData
+                );
+              }}
+            >
+              Update
+            </Button>
+          </div>
         </div>
       </Modal>
     </div>
