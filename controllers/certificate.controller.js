@@ -111,7 +111,7 @@ const Update = async (req, res, next) => {
   try {
     const { certificate_id } = req.params;
 
-    await CertificateModel.findByIdAndUpdate(certificate_id, req.query);
+    await CertificateModel.findByIdAndUpdate(certificate_id, req.body);
     return res.json(
       new ApiResponse(null, "Certificate updated successfully", 200)
     );

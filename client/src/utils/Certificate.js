@@ -7,10 +7,26 @@ const removeCertificate = (certificates, setCertificates, certificate_id) => {
   );
 };
 
+const editCertificate = (certificates, setCertificates, newCertificate) => {
+  setCertificates(
+    certificates.map((certificate) => {
+      if (certificate._id === newCertificate.id) {
+        return {
+          ...certificate,
+          name: newCertificate.name,
+          position: newCertificate.position,
+        };
+      }
+      return certificate;
+    })
+  );
+};
+
 export const RegisterCertificate = async (
   register,
   setRegister,
-  initialState
+  initialState,
+  refreshFlag
 ) => {
   const { name, position, event } = register;
   if (!name.trim() || !position.trim() || !event.trim()) {
@@ -30,6 +46,7 @@ export const RegisterCertificate = async (
     setRegister(initialState);
   } catch (err) {
     alert(err.response?.data.message || err.message || err);
+    refreshFlag();
   }
 };
 
@@ -45,22 +62,6 @@ export const DeleteCertificate = async (
   } catch (err) {
     alert(err.response?.data.message || err.message || err);
     refreshFlag();
-  }
-};
-
-export const editCertificate = async (refreshFlag, toggleLoading, editData) => {
-  toggleLoading(true);
-  try {
-    const { data } = await axios.put(`/api/certificate/update/${editData.id}`, {
-      name: editData.name,
-      position: editData.position,
-    });
-    toggleLoading(false);
-    refreshFlag();
-  } catch (err) {
-    if (err.name === "CanceledError") return;
-    toggleLoading(false);
-    alert(err.response?.data.message || err.message || err);
   }
 };
 
@@ -90,5 +91,27 @@ export const fetchCertificates = async (
       return removeToken();
     }
     alert(err.response?.data.message || err.message || err);
+  }
+};
+
+export const UpdateCertificate = async (
+  certificates,
+  setCertificates,
+  newCertificate,
+  refreshFlag
+) => {
+  try {
+    editCertificate(certificates, setCertificates, newCertificate);
+    const { data } = await axios.put(
+      `/api/certificate/update/${newCertificate.id}`,
+      {
+        name: newCertificate.name,
+        position: newCertificate.position,
+      }
+    );
+    console.log(data);
+  } catch (err) {
+    alert(err.response?.data.message || err.message || err);
+    refreshFlag();
   }
 };

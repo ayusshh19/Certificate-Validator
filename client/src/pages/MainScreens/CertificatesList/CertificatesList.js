@@ -123,7 +123,7 @@ const htmlToImageConvert = (qr_code, certificate) => {
 const CertificatesList = () => {
   const { event_id } = useParams();
 
-  const { toggleLoading, positionOption, events, removeToken } =
+  const { toggleLoading, positionOption, removeToken } =
     useContext(StateContext);
 
   const [certificates, setCertificates] = useState([]);
@@ -132,7 +132,7 @@ const CertificatesList = () => {
   const [editModal, setEditModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [certificate, setCertificate] = useState(null);
-  const [editData, setEditData] = useState({
+  const [editCertificate, setEditCertificate] = useState({
     name: "",
     position: "",
   });
@@ -141,13 +141,13 @@ const CertificatesList = () => {
 
   const handleInputChange = (field, value) => {
     if (field === "name") {
-      setEditData({
-        ...editData,
+      setEditCertificate({
+        ...editCertificate,
         name: value,
       });
     } else {
-      setEditData({
-        ...editData,
+      setEditCertificate({
+        ...editCertificate,
         [field]: value,
       });
     }
@@ -224,7 +224,7 @@ const CertificatesList = () => {
                     params.row.position = pos.value;
                   }
                 });
-                setEditData({
+                setEditCertificate({
                   id: params.row.id,
                   name: params.row.name,
                   position: params.row.position,
@@ -326,7 +326,7 @@ const CertificatesList = () => {
               id="standard-basic"
               label="Name"
               variant="standard"
-              value={editData.name}
+              value={editCertificate.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
             />
             <FormControl
@@ -340,7 +340,7 @@ const CertificatesList = () => {
               <Select
                 labelId="demo-simple-select-standard-label"
                 id="demo-simple-select-standard"
-                value={editData.position || ""}
+                value={editCertificate.position || ""}
                 onChange={(e) => handleInputChange("position", e.target.value)}
                 label="Position"
               >
@@ -361,15 +361,14 @@ const CertificatesList = () => {
                 padding: "10px 50px",
                 width: "100%",
               }}
-              onClick={async () => {
-                await UpdateCertificate(
+              onClick={() =>
+                UpdateCertificate(
                   certificates,
                   setCertificates,
-                  toggleLoading,
-                  editData,
+                  editCertificate,
                   refreshFlag
-                );
-              }}
+                )
+              }
             >
               Update
             </Button>
