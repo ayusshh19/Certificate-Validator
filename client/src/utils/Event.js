@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const RegisterEvent = async (
+export const RegisterEvent = async (
   register,
   setRegister,
   refreshFlag,
@@ -18,7 +18,7 @@ const RegisterEvent = async (
   }
 };
 
-const DeleteEvent = async (e, event_id, refreshFlag) => {
+export const DeleteEvent = async (e, event_id, refreshFlag) => {
   e.preventDefault();
   e.stopPropagation();
   if (!window.confirm("Are you sure you want to delete this event?")) return;
@@ -30,7 +30,7 @@ const DeleteEvent = async (e, event_id, refreshFlag) => {
   }
 };
 
-const fetchEvents = async (
+export const fetchEvents = async (
   controller,
   setEvents,
   toggleLoading,
@@ -53,7 +53,7 @@ const fetchEvents = async (
   }
 };
 
-const updateEvent = async (
+export const updateEvent = async (
   selectedEditEvent,
   register,
   setRegister,
@@ -74,5 +74,3 @@ const updateEvent = async (
     alert(err.response?.data.message || err.message || err);
   }
 };
-
-export { RegisterEvent, DeleteEvent, fetchEvents, updateEvent };

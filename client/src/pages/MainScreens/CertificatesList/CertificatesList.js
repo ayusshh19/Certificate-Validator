@@ -12,7 +12,7 @@ import QRCode from "react-qr-code";
 import {
   DeleteCertificate,
   fetchCertificates,
-  editCertificate,
+  UpdateCertificate,
 } from "../../../utils/Certificate";
 import dayjs from "dayjs";
 import { toPng } from "html-to-image";
@@ -362,12 +362,12 @@ const CertificatesList = () => {
                 width: "100%",
               }}
               onClick={async () => {
-                await editCertificate(
+                await UpdateCertificate(
                   certificates,
                   setCertificates,
-                  refreshFlag,
                   toggleLoading,
-                  editData
+                  editData,
+                  refreshFlag
                 );
               }}
             >
