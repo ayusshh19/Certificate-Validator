@@ -65,26 +65,6 @@ export const DeleteCertificate = async (
   }
 };
 
-export const editCertificate = async (refreshFlag, toggleLoading, editData) => {
-  console.log(editData);
-  toggleLoading(true);
-  try {
-    const { data } = await axios.put(
-      `/api/certificate/update/${editData?.id}`,
-      {
-        name: editData?.name,
-        position: editData?.position,
-      }
-    );
-    toggleLoading(false);
-    refreshFlag();
-  } catch (err) {
-    if (err.name === "CanceledError") return;
-    toggleLoading(false);
-    alert(err.response?.data.message || err.message || err);
-  }
-};
-
 export const fetchCertificates = async (
   event_id,
   controller,
