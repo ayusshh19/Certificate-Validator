@@ -22,13 +22,12 @@ export const RegisterCertificate = async (
 ) => {
   const { name, position, event } = register;
   if (!name.trim() || !position.trim() || !event.trim()) {
-    setRegister({
+    return setRegister({
       ...register,
       nameError: !name.trim(),
       positionError: !position.trim(),
       eventError: !event.trim(),
     });
-    return;
   }
   try {
     await axios.post("/api/certificate/register", {
@@ -38,7 +37,7 @@ export const RegisterCertificate = async (
     });
     setRegister(initialState);
   } catch (err) {
-    alert(err.response?.data.error || err.message || err);
+    alert(err.response?.data.message || err.message || err);
   }
 };
 
@@ -52,7 +51,7 @@ export const DeleteCertificate = async (
     removeCertificate(certificates, setCertificates, certificate_id);
   } catch (err) {
     console.log(err);
-    alert(err.response?.data.error || err.message || err);
+    alert(err.response?.data.message || err.message || err);
   }
 };
 
@@ -71,11 +70,11 @@ export const fetchCertificates = async (
         signal: controller.signal,
       }
     );
-    setCertificates(data.certificates || []);
-    setEvent(data.event || "");
+    setCertificates(data.data.certificates || []);
+    setEvent(data.data.event || "");
   } catch (err) {
     if (err.name === "CanceledError") return;
-    alert(err.response?.data.error || err.message || err);
+    alert(err.response?.data.message || err.message || err);
   }
   toggleLoading(false);
 };

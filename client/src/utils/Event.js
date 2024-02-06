@@ -7,15 +7,14 @@ const RegisterEvent = async (
   handleClose
 ) => {
   if (!register.name.trim()) {
-    setRegister({ ...register, nameError: true });
-    return;
+    return setRegister({ ...register, nameError: true });
   }
   try {
     await axios.post("/api/event/register", register);
     refreshFlag();
     handleClose();
   } catch (err) {
-    alert(err.response?.data.error || err.message || err);
+    alert(err.response?.data.message || err.message || err);
   }
 };
 
@@ -27,7 +26,7 @@ const DeleteEvent = async (e, event_id, refreshFlag) => {
     await axios.delete(`/api/event/delete/${event_id}`);
     refreshFlag();
   } catch (err) {
-    alert(err.response?.data.error || err.message || err);
+    alert(err.response?.data.message || err.message || err);
   }
 };
 
@@ -37,10 +36,10 @@ const fetchEvents = async (controller, setEvents, toggleLoading) => {
     const { data } = await axios.get("/api/event/fetch", {
       signal: controller.signal,
     });
-    setEvents(data);
+    setEvents(data.data);
   } catch (err) {
     if (err.name === "CanceledError") return;
-    alert(err.response?.data.error || err.message || err);
+    alert(err.response?.data.message || err.message || err);
   }
   toggleLoading(false);
 };
@@ -56,15 +55,14 @@ const updateEvent = async (
   const year = selectedEditEvent.year;
   const id = selectedEditEvent.id;
   if (!name.trim()) {
-    setRegister({ ...register, nameError: true });
-    return;
+    return setRegister({ ...register, nameError: true });
   }
   try {
     await axios.put(`/api/event/update/${id}`, { name, year });
     refreshFlag();
     setEditModal(false);
   } catch (err) {
-    alert(err.response?.data.error || err.message || err);
+    alert(err.response?.data.message || err.message || err);
   }
 };
 
