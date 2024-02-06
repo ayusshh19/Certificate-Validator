@@ -1,11 +1,12 @@
 const express = require("express");
 const cors = require("cors");
-const errorHandler = require("./middlewares/errorHandler.middleware");
+const { CORS_ORIGIN } = require("./config");
+const cookieParser = require("cookie-parser");
 const auth = require("./middlewares/auth.middleware");
 const IndexRouter = require("./routes/index.routes");
 const EventRouter = require("./routes/event.routes");
 const CertificateRouter = require("./routes/certificate.routes");
-const { CORS_ORIGIN } = require("./config");
+const errorHandler = require("./middlewares/errorHandler.middleware");
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(
   })
 );
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser())
 
 app.use("/api", IndexRouter);
 
