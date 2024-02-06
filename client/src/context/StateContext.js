@@ -1,19 +1,15 @@
 import React, { useState, createContext, useEffect } from "react";
+import { AuthContext } from "./AuthContext";
 import { fetchEvents } from "../utils/Event";
 
 export const StateContext = createContext();
 
 const StateProvider = ({ children }) => {
-  const [isLogin, setIsLogin] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [alerts, setAlerts] = useState([]);
   const [events, setEvents] = useState([]);
   const [fetchFlag, setFetchFlag] = useState(true);
   const [mobileNav, setMobileNav] = useState(false);
 
-  const toggleLoading = (state) => {
-    setLoading(state);
-  };
+  const { toggleLoading } = React.useContext(AuthContext);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -48,12 +44,6 @@ const StateProvider = ({ children }) => {
   return (
     <StateContext.Provider
       value={{
-        isLogin,
-        setIsLogin,
-        loading,
-        setLoading,
-        alerts,
-        setAlerts,
         events,
         generateYearOptions,
         refreshFlag,

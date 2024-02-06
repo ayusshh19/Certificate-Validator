@@ -17,6 +17,7 @@ import dayjs from "dayjs";
 import { toPng } from "html-to-image";
 import EditIcon from "@mui/icons-material/Edit";
 import { StateContext } from "../../../context/StateContext";
+import { AuthContext } from "../../../context/AuthContext";
 
 const style = {
   position: "absolute",
@@ -117,7 +118,8 @@ const htmlToImageConvert = (qr_code, certificate) => {
 const CertificatesList = () => {
   const { event_id } = useParams();
 
-  const { toggleLoading, positionOption } = useContext(StateContext);
+  const { positionOption } = useContext(StateContext);
+  const { toggleLoading } = useContext(AuthContext);
 
   const [certificates, setCertificates] = useState([]);
   const [event, setEvent] = useState("");

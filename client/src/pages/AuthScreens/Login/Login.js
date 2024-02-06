@@ -1,7 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import { Login as LoginFunction } from "../../../utils/Index";
 
 const Login = () => {
-  return <div>Login</div>;
+  const [login, setLogin] = useState({
+    username: "csi",
+    password: "password",
+    usernameError: false,
+    passwordError: false,
+  });
+  return (
+    <div>
+      <ButtonGroup
+        variant="contained"
+        aria-label="outlined primary button group"
+      >
+        <Button onClick={() => LoginFunction(login, setLogin)}>Login</Button>
+      </ButtonGroup>
+    </div>
+  );
 };
 
 export default Login;
