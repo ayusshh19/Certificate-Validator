@@ -37,11 +37,12 @@ const fetchEvents = async (controller, setEvents, toggleLoading) => {
       signal: controller.signal,
     });
     setEvents(data.data);
+    toggleLoading(false);
   } catch (err) {
     if (err.name === "CanceledError") return;
+    toggleLoading(false);
     alert(err.response?.data.message || err.message || err);
   }
-  toggleLoading(false);
 };
 
 const updateEvent = async (

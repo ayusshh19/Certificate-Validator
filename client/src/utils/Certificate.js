@@ -72,9 +72,10 @@ export const fetchCertificates = async (
     );
     setCertificates(data.data.certificates || []);
     setEvent(data.data.event || "");
+    toggleLoading(false);
   } catch (err) {
     if (err.name === "CanceledError") return;
+    toggleLoading(false);
     alert(err.response?.data.message || err.message || err);
   }
-  toggleLoading(false);
 };
