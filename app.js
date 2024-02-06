@@ -22,7 +22,7 @@ app.use(cookieParser())
 
 app.use("/api", IndexRouter);
 
-// app.use(auth);
+app.use(auth);
 
 app.use("/api/event", EventRouter);
 app.use("/api/certificate", CertificateRouter);
