@@ -45,6 +45,7 @@ export const fetchEvents = async (
   } catch (err) {
     if (err.name === "CanceledError") return;
     if (err.response?.data.name === "Unauthorized") {
+      toggleLoading(false);
       return removeToken();
     }
     alert(err.response?.data.message || err.message || err);
