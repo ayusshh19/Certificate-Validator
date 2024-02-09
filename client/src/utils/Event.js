@@ -1,5 +1,35 @@
 import axios from "axios";
 
+const removeEvent = async (events, setEvents, year, event_id) => {
+  setEvents(
+    events.filter((years) => {
+      if (years.year === year) {
+        years.events = years.events.filter((event) => event._id !== event_id);
+      }
+      if (years.events.length === 0) {
+        return false;
+      }
+      return years;
+    })
+  );
+};
+
+const editEvent = async (events, setEvents, year, event_id, name) => {
+  setEvents(
+    events.map((years) => {
+      if (years.year === year) {
+        years.events = years.events.map((event) => {
+          if (event._id === event_id) {
+            event.name = name;
+          }
+          return event;
+        });
+      }
+      return years;
+    })
+  );
+};
+
 export const RegisterEvent = async (
   register,
   setRegister,
@@ -18,16 +48,25 @@ export const RegisterEvent = async (
   }
 };
 
-export const DeleteEvent = async (e, event_id, refreshFlag) => {
+export const DeleteEvent = async (
+  e,
+  events,
+  setEvents,
+  year,
+  event_id,
+  toggleLoading
+) => {
   e.preventDefault();
   e.stopPropagation();
   if (!window.confirm("Are you sure you want to delete this event?")) return;
+  toggleLoading(true);
   try {
     await axios.delete(`/api/event/delete/${event_id}`);
-    refreshFlag();
+    removeEvent(events, setEvents, year, event_id);
   } catch (err) {
     alert(err.response?.data.message || err.message || err);
   }
+  toggleLoading(false);
 };
 
 export const fetchEvents = async (
@@ -57,6 +96,8 @@ export const updateEvent = async (
   selectedEditEvent,
   register,
   setRegister,
+  events,
+  setEvents,
   refreshFlag,
   setEditModal
 ) => {
@@ -68,6 +109,7 @@ export const updateEvent = async (
   }
   try {
     await axios.put(`/api/event/update/${id}`, { name, year });
+    // editEvent(events, setEvents, year, id, name);
     refreshFlag();
     setEditModal(false);
   } catch (err) {

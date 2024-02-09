@@ -40,8 +40,17 @@ const initialState = {
   nameError: false,
 };
 
+const generateYearOptions = () => {
+  const currentYear = new Date().getFullYear();
+  const years = [];
+  for (let i = currentYear - 10; i <= currentYear + 1; i++) {
+    years.push(i);
+  }
+  return years;
+};
+
 const Dashboard = () => {
-  const { events, generateYearOptions, refreshFlag, toggleMobileNav } =
+  const { events, setEvents, refreshFlag, toggleMobileNav, toggleLoading } =
     useContext(StateContext);
 
   const [open, setOpen] = useState(false);
@@ -188,7 +197,14 @@ const Dashboard = () => {
                               <button
                                 className="d-flex align-items-center justify-content-center"
                                 onClick={(e) =>
-                                  DeleteEvent(e, event._id, refreshFlag)
+                                  DeleteEvent(
+                                    e,
+                                    events,
+                                    setEvents,
+                                    event.year,
+                                    event._id,
+                                    toggleLoading
+                                  )
                                 }
                               >
                                 Delete{" "}
@@ -342,6 +358,8 @@ const Dashboard = () => {
                 selectedEditEvent,
                 register,
                 setRegister,
+                events,
+                setEvents,
                 refreshFlag,
                 setEditModal
               )

@@ -26,7 +26,7 @@ const StateProvider = ({ children }) => {
   const removeToken = () => {
     localStorage.removeItem("accessToken");
     setIsLogin(false);
-  }
+  };
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -46,15 +46,6 @@ const StateProvider = ({ children }) => {
     fetchEvents(controller, setEvents, toggleLoading, removeToken);
     return () => controller.abort();
   }, [isLogin, fetchFlag]);
-
-  const generateYearOptions = () => {
-    const currentYear = new Date().getFullYear();
-    const years = [];
-    for (let i = currentYear - 10; i <= currentYear + 2; i++) {
-      years.push(i);
-    }
-    return years;
-  };
 
   const refreshFlag = () => {
     setFetchFlag((prev) => !prev);
@@ -83,7 +74,7 @@ const StateProvider = ({ children }) => {
         setToken,
         removeToken,
         events,
-        generateYearOptions,
+        setEvents,
         refreshFlag,
         toggleMobileNav,
         mobileNav,

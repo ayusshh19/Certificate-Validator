@@ -118,9 +118,9 @@ export const UpdateCertificate = async (
       position: newCertificate.position,
     });
     editCertificate(certificates, setCertificates, newCertificate);
+    setEditModal(false);
   } catch (err) {
     alert(err.response?.data.message || err.message || err);
   }
   toggleLoading(false);
-  setEditModal(false);
 };
