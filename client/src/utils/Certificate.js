@@ -83,15 +83,15 @@ export const fetchCertificates = async (
     );
     setCertificates(data.data.certificates || []);
     setEvent(data.data.event || "");
-    toggleLoading(false);
+    
   } catch (err) {
-    toggleLoading(false);
     if (err.name === "CanceledError") return;
     if (err.response?.data.name === "Unauthorized") {
       return removeToken();
     }
     alert(err.response?.data.message || err.message || err);
   }
+  toggleLoading(false);
 };
 
 export const UpdateCertificate = async (

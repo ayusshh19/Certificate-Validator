@@ -42,15 +42,14 @@ export const fetchEvents = async (
       signal: controller.signal,
     });
     setEvents(data.data);
-    toggleLoading(false);
   } catch (err) {
-    toggleLoading(false);
     if (err.name === "CanceledError") return;
     if (err.response?.data.name === "Unauthorized") {
       return removeToken();
     }
     alert(err.response?.data.message || err.message || err);
   }
+  toggleLoading(false);
 };
 
 export const updateEvent = async (

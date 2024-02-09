@@ -18,19 +18,4 @@ const Login = async (login, setLogin, setToken) => {
   }
 };
 
-const TokenVerify = async (controller, setEvents, toggleLoading) => {
-  toggleLoading(true);
-  try {
-    const { data } = await axios.get("/api/token/verify", {
-      signal: controller.signal,
-    });
-    console.log(data);
-    toggleLoading(false);
-  } catch (err) {
-    if (err.name === "CanceledError") return;
-    toggleLoading(false);
-    alert(err.response?.data.message || err.message || err);
-  }
-};
-
-export { Login, TokenVerify };
+export { Login };
