@@ -128,7 +128,6 @@ const CertificatesList = () => {
 
   const [certificates, setCertificates] = useState([]);
   const [event, setEvent] = useState("");
-  const [fetchFlag, setFetchFlag] = useState(true);
   const [editModal, setEditModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [certificate, setCertificate] = useState(null);
@@ -165,11 +164,7 @@ const CertificatesList = () => {
       removeToken
     );
     return () => controller.abort();
-  }, [event_id, fetchFlag]);
-
-  const refreshFlag = () => {
-    setFetchFlag((prev) => !prev);
-  };
+  }, [event_id]);
 
   return (
     <div>
@@ -241,7 +236,7 @@ const CertificatesList = () => {
                       params.row.id,
                       certificates,
                       setCertificates,
-                      refreshFlag
+                      toggleLoading
                     );
                   }
                 })();
@@ -367,8 +362,8 @@ const CertificatesList = () => {
                   certificates,
                   setCertificates,
                   editCertificate,
-                  refreshFlag,
-                  setEditModal
+                  setEditModal,
+                  toggleLoading
                 )
               }
             >

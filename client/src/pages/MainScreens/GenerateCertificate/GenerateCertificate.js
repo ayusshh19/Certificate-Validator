@@ -34,7 +34,8 @@ const initialState = {
 };
 
 const GenerateCertificate = () => {
-  const { events, positionOption, toggleMobileNav, refreshFlag } = useContext(StateContext);
+  const { events, positionOption, toggleMobileNav, toggleLoading } =
+    useContext(StateContext);
 
   const [register, setRegister] = useState(initialState);
 
@@ -202,7 +203,12 @@ const GenerateCertificate = () => {
           variant="contained"
           style={{ borderRadius: "12px", padding: "10px 50px" }}
           onClick={() =>
-            RegisterCertificate(register, setRegister, initialState, refreshFlag)
+            RegisterCertificate(
+              register,
+              setRegister,
+              initialState,
+              toggleLoading
+            )
           }
         >
           Generate Certificate

@@ -1,13 +1,21 @@
 import axios from "axios";
 import dayjs from "dayjs";
 
-const removeCertificate = (certificates, setCertificates, certificate_id) => {
+const removeCertificate = async (
+  certificates,
+  setCertificates,
+  certificate_id
+) => {
   setCertificates(
     certificates.filter((certificate) => certificate._id !== certificate_id)
   );
 };
 
-const editCertificate = (certificates, setCertificates, newCertificate) => {
+const editCertificate = async (
+  certificates,
+  setCertificates,
+  newCertificate
+) => {
   setCertificates(
     certificates.map((certificate) => {
       if (certificate._id === newCertificate.id) {
@@ -26,8 +34,9 @@ export const RegisterCertificate = async (
   register,
   setRegister,
   initialState,
-  refreshFlag
+  toggleLoading
 ) => {
+  toggleLoading(true);
   const { name, position, event } = register;
   if (!name.trim() || !position.trim() || !event.trim()) {
     return setRegister({
@@ -46,23 +55,24 @@ export const RegisterCertificate = async (
     setRegister(initialState);
   } catch (err) {
     alert(err.response?.data.message || err.message || err);
-    refreshFlag();
   }
+  toggleLoading(false);
 };
 
 export const DeleteCertificate = async (
   certificate_id,
   certificates,
   setCertificates,
-  refreshFlag
+  toggleLoading
 ) => {
+  toggleLoading(true);
   try {
-    removeCertificate(certificates, setCertificates, certificate_id);
     await axios.delete(`/api/certificate/delete/${certificate_id}`);
+    removeCertificate(certificates, setCertificates, certificate_id);
   } catch (err) {
     alert(err.response?.data.message || err.message || err);
-    refreshFlag();
   }
+  toggleLoading(false);
 };
 
 export const fetchCertificates = async (
@@ -83,7 +93,6 @@ export const fetchCertificates = async (
     );
     setCertificates(data.data.certificates || []);
     setEvent(data.data.event || "");
-    
   } catch (err) {
     if (err.name === "CanceledError") return;
     if (err.response?.data.name === "Unauthorized") {
@@ -99,22 +108,19 @@ export const UpdateCertificate = async (
   certificates,
   setCertificates,
   newCertificate,
-  refreshFlag,
-  setEditModal
+  setEditModal,
+  toggleLoading
 ) => {
+  toggleLoading(true);
   try {
-    const { data } = await axios.put(
-      `/api/certificate/update/${newCertificate.id}`,
-      {
-        name: newCertificate.name,
-        position: newCertificate.position,
-      }
-    );
+    await axios.put(`/api/certificate/update/${newCertificate.id}`, {
+      name: newCertificate.name,
+      position: newCertificate.position,
+    });
     editCertificate(certificates, setCertificates, newCertificate);
-    console.log(data);
   } catch (err) {
     alert(err.response?.data.message || err.message || err);
-    refreshFlag();
   }
+  toggleLoading(false);
   setEditModal(false);
 };
