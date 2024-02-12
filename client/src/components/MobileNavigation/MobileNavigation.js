@@ -8,6 +8,7 @@ import NoteAddIcon from "@mui/icons-material/NoteAdd";
 import { StateContext } from "../../context/StateContext";
 import CloseIcon from "@mui/icons-material/Close";
 import { IconButton } from "@mui/material";
+import { Logout } from "../../utils/Index";
 
 const SideNavigation = () => {
   const [value, setValue] = React.useState(0);
@@ -61,6 +62,13 @@ const SideNavigation = () => {
           onClick={() => toggleMobileNav(false)}
         />
       </Tabs>
+
+      <div
+        className="logout"
+        style={{ position: "fixed", bottom: 0, width: "100%" }}
+      >
+        <button onClick={Logout}>Logout</button>
+      </div>
     </div>
   );
 };

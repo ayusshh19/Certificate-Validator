@@ -1,6 +1,12 @@
 import axios from "axios";
 
-const Login = async (login, setLogin, toggleLoading, setToken, initialState) => {
+const Login = async (
+  login,
+  setLogin,
+  toggleLoading,
+  setToken,
+  initialState
+) => {
   const { username, password } = login;
   if (!username.trim() || !password.trim()) {
     return setLogin({
@@ -24,4 +30,9 @@ const Login = async (login, setLogin, toggleLoading, setToken, initialState) => 
   toggleLoading(false);
 };
 
-export { Login };
+const Logout = () => {
+  localStorage.removeItem("accessToken");
+  window.location.href = "/login";
+};
+
+export { Login, Logout };
