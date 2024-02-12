@@ -5,6 +5,7 @@ import Dashboard from "./Dashboard/Dashboard";
 import GenerateCertificate from "./GenerateCertificate/GenerateCertificate.js";
 import CertificatesList from "./CertificatesList/CertificatesList.js";
 import MobileNavigation from "../../components/MobileNavigation/MobileNavigation";
+import VerifyCertificate from "../AuthScreens/VerifyCertificate/VerifyCertificate.js";
 
 const MainScreen = () => {
   return (
@@ -30,6 +31,10 @@ const MainScreen = () => {
               <Route
                 path="/generate-certificate"
                 element={<GenerateCertificate />}
+              />
+              <Route
+                path="/verify-certificate/:id"
+                element={<VerifyCertificate />}
               />
               <Route path="*" element={<Navigate to="/dashboard" />} />
             </Routes>

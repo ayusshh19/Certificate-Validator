@@ -287,7 +287,13 @@ const CertificatesList = () => {
             </div>
           </div>{" "}
           <div className="mt-3 text-center">
+            <NavLink to={`/verify-certificate/${certificate?.uid}`}>
+              <Button variant="outlined" color="primary">
+                View Certificate
+              </Button>
+            </NavLink>
             <Button
+              className="ms-3"
               variant="contained"
               color="primary"
               onClick={() => htmlToImageConvert(qr_code, certificate)}
