@@ -49,6 +49,7 @@ const Login = () => {
             </div>
             <div className="col-md-6 col-lg-8 d-flex align-items-end">
               <TextField
+                type="password"
                 style={{ width: "100%" }}
                 id="standard-basic"
                 label="Password"
@@ -69,7 +70,13 @@ const Login = () => {
           variant="contained"
           style={{ borderRadius: "12px", padding: "10px 50px" }}
           onClick={() =>
-            LoginFunction(login, setLogin, toggleLoading, setToken, initialState)
+            LoginFunction(
+              login,
+              setLogin,
+              toggleLoading,
+              setToken,
+              initialState
+            )
           }
         >
           Login

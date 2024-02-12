@@ -9,6 +9,7 @@ import { StateContext } from "../../context/StateContext";
 import CloseIcon from "@mui/icons-material/Close";
 import { IconButton } from "@mui/material";
 import { Logout } from "../../utils/Index";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const SideNavigation = () => {
   const [value, setValue] = React.useState(0);
@@ -27,7 +28,20 @@ const SideNavigation = () => {
           color: "#fff",
         }}
       >
-        <h4 className="my-3">CSI DMCE</h4>
+        <div className="d-flex align-items-center">
+          <IconButton
+            aria-label="delete"
+            size="large"
+            className="close"
+            style={{
+              transform: "rotate(180deg)",
+            }}
+            onClick={Logout}
+          >
+            <LogoutIcon style={{ color: "#fff" }} />
+          </IconButton>
+          <h4 className="my-3">CSI DMCE</h4>
+        </div>
         <IconButton
           aria-label="delete"
           size="large"
@@ -62,13 +76,6 @@ const SideNavigation = () => {
           onClick={() => toggleMobileNav(false)}
         />
       </Tabs>
-
-      <div
-        className="logout"
-        style={{ position: "fixed", bottom: 0, width: "100%" }}
-      >
-        <button onClick={Logout}>Logout</button>
-      </div>
     </div>
   );
 };
