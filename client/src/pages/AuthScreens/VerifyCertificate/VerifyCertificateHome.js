@@ -33,7 +33,16 @@ const VerifyCertificateHome = () => {
                 Verify the authenticity of your certificate by entering the
                 certificate ID
               </p>
-              <form>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (certificateId?.trim().length === 12) {
+                    window.location.href = `/verify-certificate/${certificateId}`;
+                  } else {
+                    alert("Enter valid certificate ID");
+                  }
+                }}
+              >
                 <div className="form-group">
                   <input
                     onChange={handleChange}
