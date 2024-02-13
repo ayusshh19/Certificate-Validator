@@ -1,3 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&display=swap");
+
 .verify-home {
   display: flex;
   justify-content: center;
@@ -40,4 +44,83 @@
 .verify-home .container button:hover {
   color: #001f6d;
   background-color: #fff;
+}
+
+/*  */
+
+.auth-certi {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgb(255, 255, 255);
+}
+
+.auth-certi .certificate {
+  width: 90vw;
+  max-width: 1000px;
+  background-color: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.219);
+  position: relative;
+}
+
+.auth-certi .certificate #name {
+  position: absolute;
+  top: 44%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3.4em;
+  font-weight: 600;
+  color: #000;
+  text-transform: capitalize;
+  white-space: nowrap;
+  text-align: center;
+  font-family: "Dancing Script", cursive;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.auth-certi .certificate #desc {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5em;
+  font-weight: 400;
+  color: #000;
+  font-size: 1em;
+  width: 70%;
+  text-align: center;
+}
+
+@media (max-width: 1000px) {
+  .auth-certi .certificate #desc {
+    font-size: 0.8em;
+    width: 85%;
+  }
+}
+@media (max-width: 768px) {
+  .auth-certi .certificate #name {
+    font-size: 2em;
+  }
+  .auth-certi .certificate #desc {
+    font-size: 0.7em;
+    width: 80%;
+  }
+}
+
+@media (max-width: 580px) {
+  .auth-certi .certificate {
+    border-radius: 10px;
+  }
+  .auth-certi .certificate #name {
+    font-size: 1.3em;
+  }
+  .auth-certi .certificate #desc {
+    width: 85%;
+    font-size: 0.5em;
+  }
 }

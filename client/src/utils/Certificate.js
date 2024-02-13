@@ -124,3 +124,19 @@ export const UpdateCertificate = async (
   }
   toggleLoading(false);
 };
+export const AuthCertificate = async (
+  uid,
+  toggleLoading,
+  setCertificateData
+) => {
+  toggleLoading(true);
+  try {
+    const { data } = await axios.get(`/api/certificate/verify/${uid}`);
+    toggleLoading(false);
+    setCertificateData(data.data);
+    return data.data;
+  } catch (err) {
+    alert(err.response?.data.message || err.message || err);
+  }
+  toggleLoading(false);
+};
