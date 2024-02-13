@@ -1,0 +1,43 @@
+.verify-home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  /* background-image: url("../../../assets/certificate_bg.jpeg"); */
+  /* background-position: center;
+  background-size: cover; */
+  background-color: rgb(0, 7, 60);
+}
+
+.verify-home .container {
+  width: 90vw;
+  max-width: 500px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 18px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.verify-home .container h1 {
+  text-align: center;
+  font-size: 3em;
+}
+
+.verify-home .container .form-group {
+  margin-bottom: 20px;
+}
+
+.verify-home .container button {
+  padding: 10px;
+  border-radius: 14px;
+  border: none;
+  background-color: #00309a;
+  color: white;
+  font-size: 18px;
+  border: 1px solid #00309a;
+}
+
+.verify-home .container button:hover {
+  color: #001f6d;
+  background-color: #fff;
+}
