@@ -128,9 +128,20 @@ const Verify = async (req, res, next) => {
     if (!certificate) {
       throw new ApiError("Certificate not found", 404, "NotFound");
     }
-    
+
+    const event = await EventModel.findById(certificate.event_id).lean();
+    if (!event) {
+      throw new ApiError("Event not found", 404, "NotFound");
+    }
+
+    const event_name = event.name;
+
     return res.json(
-      new ApiResponse(certificate, "Certificate fetched successfully", 200)
+      new ApiResponse(
+        { ...certificate, event_name },
+        "Certificate fetched successfully",
+        200
+      )
     );
   } catch (err) {
     next(err);

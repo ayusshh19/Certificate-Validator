@@ -62,7 +62,7 @@ const VerifyCertificate = () => {
             <p id="desc">
               for achieving the{" "}
               <b>{getPositionText(certificateData?.position)} position</b> at{" "}
-              <b>{certificateData?.event_id}</b> organized by CSI DMCE on{" "}
+              <b>{certificateData?.event_name}</b> organized by CSI DMCE on{" "}
               {formatDate(certificateData?.date)}, at Datta Meghe College of
               Engineering, Airoli.
             </p>
