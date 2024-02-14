@@ -95,7 +95,7 @@ const FetchEvent = async (req, res, next) => {
     return res.json(
       new ApiResponse(
         {
-          event: event.name,
+          event: event?.name,
           certificates,
         },
         "Certificates fetched successfully",
@@ -130,15 +130,10 @@ const Verify = async (req, res, next) => {
     }
 
     const event = await EventModel.findById(certificate.event_id).lean();
-    if (!event) {
-      throw new ApiError("Event not found", 404, "NotFound");
-    }
-
-    const event_name = event.name;
 
     return res.json(
       new ApiResponse(
-        { ...certificate, event_name },
+        { ...certificate, event: event?.name },
         "Certificate fetched successfully",
         200
       )

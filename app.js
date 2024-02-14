@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const { CORS_ORIGIN } = require("./config");
 const cookieParser = require("cookie-parser");
-const auth = require("./middlewares/auth.middleware");
 const IndexRouter = require("./routes/index.routes");
 const EventRouter = require("./routes/event.routes");
 const CertificateRouter = require("./routes/certificate.routes");
@@ -21,9 +20,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use("/api", IndexRouter);
-
-// app.use(auth);
-
 app.use("/api/event", EventRouter);
 app.use("/api/certificate", CertificateRouter);
 

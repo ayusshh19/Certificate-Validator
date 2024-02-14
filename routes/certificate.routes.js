@@ -10,6 +10,16 @@ const {
   Update: UpdateCertificate,
   Verify: VerifyCertificate,
 } = require("../controllers/certificate.controller");
+const auth = require("../middlewares/auth.middleware");
+
+router.get(
+  "/verify/:uid",
+  param("uid").trim().notEmpty().withMessage("uid is required"),
+  fieldHandler,
+  VerifyCertificate
+);
+
+router.use(auth);
 
 router.post(
   "/register",
@@ -61,13 +71,6 @@ router.put(
     .withMessage("certificate id is required"),
   fieldHandler,
   UpdateCertificate
-);
-
-router.get(
-  "/verify/:uid",
-  param("uid").trim().notEmpty().withMessage("uid is required"),
-  fieldHandler,
-  VerifyCertificate
 );
 
 module.exports = router;

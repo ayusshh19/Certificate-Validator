@@ -10,6 +10,9 @@ const {
   FetchAll: FetchAllEvent,
   Update: UpdateEvent,
 } = require("../controllers/event.controller");
+const auth = require("../middlewares/auth.middleware");
+
+router.use(auth);
 
 router.post(
   "/register",
