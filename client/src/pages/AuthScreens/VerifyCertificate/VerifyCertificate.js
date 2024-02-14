@@ -46,9 +46,7 @@ const VerifyCertificate = () => {
 
   return (
     <div className="auth-certi">
-      <Button
-        variant="outlined"
-        color="success"
+      <button
         style={{
           position: "absolute",
           top: "20px",
@@ -56,17 +54,20 @@ const VerifyCertificate = () => {
           borderRadius: "50%",
           width: "40px",
           height: "40px",
-          minWidth: "40px",
-          marginRight: "20px",
-          padding: "0",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          backgroundColor: "white",
+          border: "none",
         }}
-        onClick={() => navigate(-1)}
+        onClick={() => navigate("/verify-certificate")}
       >
-        <ChevronLeftIcon />
-      </Button>
+        <ChevronLeftIcon
+          style={{
+            fontSize: "2rem",
+          }}
+        />
+      </button>
 
       {certificateData && (
         <div className="certificate">
