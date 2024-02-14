@@ -131,6 +131,11 @@ const Dashboard = () => {
             style={{
               boxShadow: "none",
             }}
+            sx={{
+              "&.MuiAccordion-root::before": {
+                display: "none",
+              },
+            }}
           >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
