@@ -83,12 +83,16 @@ export const fetchCertificates = async (
   toggleLoading,
   removeToken
 ) => {
+  const token = localStorage.getItem("accessToken");
   toggleLoading(true);
   try {
     const { data } = await axios.get(
       `/api/certificate/fetch/event/${event_id}`,
       {
         signal: controller.signal,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
     setCertificates(data.data.certificates || []);
@@ -97,7 +101,7 @@ export const fetchCertificates = async (
     if (err.name === "CanceledError") return;
     if (err.response?.data.name === "Unauthorized") {
       toggleLoading(false);
-      // return removeToken();
+      return removeToken();
     }
     alert(err.response?.data.message || err.message || err);
   }
