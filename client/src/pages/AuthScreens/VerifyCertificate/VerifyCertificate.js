@@ -117,8 +117,8 @@ const VerifyCertificate = () => {
           <p id="name">{certificateData?.name}</p>
           {certificateData?.position === 0 ? (
             <p id="desc">
-              for participation in the <b>{certificateData?.event_id}</b>{" "}
-              organized by CSI-CATT DMCE on{" "}
+              for participation in the <b>{certificateData?.event}</b> organized
+              by CSI-CATT DMCE on{" "}
               {dayjs(certificateData?.date).format("DD MMMM YYYY")}, at Datta
               Meghe College of Engineering, Airoli.
             </p>
