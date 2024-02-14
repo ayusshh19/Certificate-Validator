@@ -33,7 +33,7 @@ const MainScreen = () => {
                 element={<GenerateCertificate />}
               />
               <Route
-                path="/verify-certificate/:id"
+                path="/verify-certificate/:uid"
                 element={<VerifyCertificate />}
               />
               <Route path="*" element={<Navigate to="/dashboard" />} />
