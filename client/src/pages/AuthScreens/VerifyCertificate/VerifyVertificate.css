@@ -123,7 +123,7 @@
   bottom: 10%;
   right: 8%;
   width: 8vw;
-  min-width: 40px;
+  min-width: 35px;
   max-width: 150px;
   background-color: white;
   display: flex;
@@ -135,10 +135,10 @@
 
 .auth-certi .certificate #position-tag {
   position: absolute;
-  transform: translate(-50%, -48%);
+  transform: translate(-50%, -46%);
   top: 70%;
-  left: 50%;
-  font-size: 3.5vw;
+  left: 49.8%;
+  font-size: 2.8vw;
   color: #c99b40;
   font-weight: 600;
   font-style: normal;
@@ -188,7 +188,8 @@
     font-size: 3.7vw;
   }
   .auth-certi .certificate #qr_code_id {
-    border: #c49a52 solid 2px;
-    padding: 0.2rem;
+    right: 7.6%;
+    border: #c49a52 solid 1.5px;
+    padding: 0.15rem;
   }
 }
