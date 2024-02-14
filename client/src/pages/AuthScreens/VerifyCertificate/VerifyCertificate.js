@@ -70,7 +70,12 @@ const VerifyCertificate = () => {
 
       {certificateData && (
         <div className="certificate">
-          <img src={Certificate} alt="" className="img-fluid" />
+          <img
+            src={Certificate}
+            alt=""
+            className="img-fluid"
+            style={{ userSelect: "none" }}
+          />
           <p
             id="title"
             style={{
@@ -98,6 +103,11 @@ const VerifyCertificate = () => {
             </p>
           )}
           <p id="uid">Certificate ID : {certificateData?.uid}</p>
+          <p id="position-tag">
+            {certificateData?.position === 0
+              ? ""
+              : getPositionText(certificateData?.position)}{" "}
+          </p>
           <div id="qr_code_id" ref={qr_code}>
             <QRCode
               size={200}

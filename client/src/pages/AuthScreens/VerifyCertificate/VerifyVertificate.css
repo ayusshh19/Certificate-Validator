@@ -97,7 +97,7 @@
 
 .auth-certi .certificate #desc {
   position: absolute;
-  top: 53%;
+  top: 54%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-weight: 400;
@@ -123,6 +123,7 @@
   bottom: 10%;
   right: 8%;
   width: 8vw;
+  min-width: 40px;
   max-width: 150px;
   background-color: white;
   display: flex;
@@ -130,6 +131,21 @@
   align-items: center;
   border: #c49a52 solid 3px;
   padding: 0.4rem;
+}
+
+.auth-certi .certificate #position-tag {
+  position: absolute;
+  transform: translate(-50%, -48%);
+  top: 70%;
+  left: 50%;
+  font-size: 3.5vw;
+  color: #c99b40;
+  font-weight: 600;
+  font-style: normal;
+  text-transform: capitalize;
+  white-space: nowrap;
+  text-align: center;
+  opacity: 0.7;
 }
 
 @media (max-width: 1000px) {
@@ -153,7 +169,6 @@
 
 @media (max-width: 580px) {
   .auth-certi .certificate {
-    border-radius: 10px;
   }
   .auth-certi .certificate #name {
     font-size: 1.3em;
@@ -165,5 +180,15 @@
   }
   .auth-certi .certificate #uid {
     font-size: 0.4em;
+  }
+  .auth-certi .certificate #position-tag {
+    position: absolute;
+    transform: translate(-50%, -47%);
+    top: 70.5%;
+    font-size: 3.7vw;
+  }
+  .auth-certi .certificate #qr_code_id {
+    border: #c49a52 solid 2px;
+    padding: 0.2rem;
   }
 }
