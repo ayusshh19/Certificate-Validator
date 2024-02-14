@@ -139,9 +139,10 @@ export const AuthCertificate = async (
       signal: controller.signal,
     });
     setCertificateData(data.data);
-    setTimeout(() => {
-      startConfetti();
-    }, 500);
+    data.data?.position !== 0 &&
+      setTimeout(() => {
+        startConfetti();
+      }, 500);
   } catch (err) {
     if (err.name === "CanceledError") return;
     alert(err.response?.data.message || err.message || err);
