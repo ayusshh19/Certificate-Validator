@@ -6,9 +6,10 @@ import Certificate from "../../../assets/certificate.png";
 import dayjs from "dayjs";
 import QRCode from "react-qr-code";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import Button from "@mui/material/Button";
+import { toPng } from "html-to-image";
 import { useNavigate } from "react-router-dom";
-import confetti from "canvas-confetti"; // Import canvas-confetti
+import confetti from "canvas-confetti";
+import Button from "@mui/material/Button";
 
 const VerifyCertificate = () => {
   const { uid } = useParams();
@@ -17,7 +18,29 @@ const VerifyCertificate = () => {
 
   const [certificateData, setCertificateData] = useState(null);
   const qr_code = useRef(null);
+  const certificate = useRef(null);
   const url = useRef(`${window.location.origin}/verify-certificate/${uid}`);
+
+  const htmlToImageConvert = (certificate) => {
+    toPng(certificate.current, {
+      cacheBust: false,
+      // width: 200,
+      // height: 200,
+      style: {
+        transform: "none",
+      },
+    })
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download =
+          certificateData?.event + "-" + certificateData?.name + ".png";
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((err) => {
+        alert(err.message || "Something went wrong");
+      });
+  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -73,7 +96,7 @@ const VerifyCertificate = () => {
   };
 
   return (
-    <div className="auth-certi">
+    <div className="auth-certi flex-column">
       <button
         style={{
           position: "absolute",
@@ -98,54 +121,71 @@ const VerifyCertificate = () => {
       </button>
 
       {certificateData && (
-        <div className="certificate">
-          <img
-            src={Certificate}
-            alt=""
-            className="img-fluid"
-            style={{ userSelect: "none" }}
-          />
-          <p
-            id="title"
-            style={{
-              fontSize: `min(3.5vw, 40px)`,
-            }}
-          >
-            Certificate of{" "}
-            {certificateData?.position === 0 ? "Participation" : "Achievement"}
-          </p>
-          <p id="name">{certificateData?.name}</p>
-          {certificateData?.position === 0 ? (
-            <p id="desc">
-              for participation in the <b>{certificateData?.event}</b> organized
-              by CSI-CATT DMCE on{" "}
-              {dayjs(certificateData?.date).format("DD MMMM YYYY")}, at Datta
-              Meghe College of Engineering, Airoli.
-            </p>
-          ) : (
-            <p id="desc">
-              for achieving the{" "}
-              <b>{getPositionText(certificateData?.position)} position</b> at{" "}
-              <b>{certificateData?.event}</b> organized by CSI-CATT DMCE on{" "}
-              {dayjs(certificateData?.date).format("DD MMMM YYYY")}, at Datta
-              Meghe College of Engineering, Airoli.
-            </p>
-          )}
-          <p id="uid">Certificate ID : {certificateData?.uid}</p>
-          <p id="position-tag">
-            {certificateData?.position === 0
-              ? ""
-              : getPositionText(certificateData?.position)}{" "}
-          </p>
-          <div id="qr_code_id" ref={qr_code}>
-            <QRCode
-              size={200}
-              style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-              value={url.current || ""}
-              viewBox={`0 0 200 200`}
+        <>
+          <div className="certificate" ref={certificate}>
+            <img
+              src={Certificate}
+              alt=""
+              className="img-fluid"
+              style={{ userSelect: "none" }}
             />
+            <p
+              id="title"
+              style={{
+                fontSize: `min(3.5vw, 40px)`,
+              }}
+            >
+              Certificate of{" "}
+              {certificateData?.position === 0
+                ? "Participation"
+                : "Achievement"}
+            </p>
+            <p id="name">{certificateData?.name}</p>
+            {certificateData?.position === 0 ? (
+              <p id="desc">
+                for participation in the <b>{certificateData?.event}</b>{" "}
+                organized by CSI-CATT DMCE on{" "}
+                {dayjs(certificateData?.date).format("DD MMMM YYYY")}, at Datta
+                Meghe College of Engineering, Airoli.
+              </p>
+            ) : (
+              <p id="desc">
+                for achieving the{" "}
+                <b>{getPositionText(certificateData?.position)} position</b> at{" "}
+                <b>{certificateData?.event}</b> organized by CSI-CATT DMCE on{" "}
+                {dayjs(certificateData?.date).format("DD MMMM YYYY")}, at Datta
+                Meghe College of Engineering, Airoli.
+              </p>
+            )}
+            <p id="uid">Certificate ID : {certificateData?.uid}</p>
+            <p id="position-tag">
+              {certificateData?.position === 0
+                ? ""
+                : getPositionText(certificateData?.position)}{" "}
+            </p>
+            <div id="qr_code_id" ref={qr_code}>
+              <QRCode
+                size={200}
+                style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                value={url.current || ""}
+                viewBox={`0 0 200 200`}
+              />
+            </div>
           </div>
-        </div>
+          <Button
+            onClick={() => htmlToImageConvert(certificate)}
+            variant="contained"
+            color="primary"
+            style={{
+              marginTop: "20px",
+              borderRadius: "14px",
+              padding: "10px 18px",
+            }}
+            disableElevation
+          >
+            Download Certificate
+          </Button>
+        </>
       )}
     </div>
   );
