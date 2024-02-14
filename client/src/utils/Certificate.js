@@ -97,7 +97,7 @@ export const fetchCertificates = async (
     if (err.name === "CanceledError") return;
     if (err.response?.data.name === "Unauthorized") {
       toggleLoading(false);
-      return removeToken();
+      // return removeToken();
     }
     alert(err.response?.data.message || err.message || err);
   }
