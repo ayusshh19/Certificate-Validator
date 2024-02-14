@@ -123,6 +123,21 @@
   text-align: center;
 }
 
+.auth-certi .certificate #qr_code_id {
+  position: absolute;
+  bottom: 6%;
+  right: 3%;
+  position: absolute;
+  bottom: 10%;
+  right: 3%;
+  width: 12vw;
+  max-width: 150px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 @media (max-width: 1000px) {
   .auth-certi .certificate #desc {
     font-size: 0.8em;

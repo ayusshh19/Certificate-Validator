@@ -12,9 +12,7 @@ const VerifyCertificate = () => {
 
   const [certificateData, setCertificateData] = useState(null);
   const qr_code = useRef(null);
-  const url = useRef(
-    `${window.location.origin}/verify-certificate/${uid}`
-  );
+  const url = useRef(`${window.location.origin}/verify-certificate/${uid}`);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -69,25 +67,16 @@ const VerifyCertificate = () => {
           )}
           <p id="uid">Certificate ID : {certificateData?.uid}</p>
           <div
+            id="qr_code_id"
             className="ms-md-3 mt-4 mt-md-0 p-md-2"
             ref={qr_code}
-            style={{
-              width: "100%",
-              maxWidth: "200px",
-              backgroundColor: "white",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
           >
             <QRCode
-              size={200} // Adjust the size as needed
+              size={200}
               style={{ height: "auto", maxWidth: "100%", width: "100%" }}
               value={url.current || ""}
-              viewBox={`0 0 200 200`} // Adjust the viewBox dimensions
+              viewBox={`0 0 200 200`}
             />
-
-            <h6 className="mt-2 text-center">{uid}</h6>
           </div>
         </div>
       )}
