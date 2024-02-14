@@ -48,6 +48,7 @@ const VerifyCertificate = () => {
     <div className="auth-certi">
       <Button
         variant="outlined"
+        color="success"
         style={{
           position: "absolute",
           top: "20px",
@@ -73,7 +74,7 @@ const VerifyCertificate = () => {
           <p
             id="title"
             style={{
-              fontSize: `min(4vw, 45px)`,
+              fontSize: `min(3.5vw, 40px)`,
             }}
           >
             Certificate of{" "}
@@ -83,7 +84,7 @@ const VerifyCertificate = () => {
           {certificateData?.position === 0 ? (
             <p id="desc">
               for participation in the <b>{certificateData?.event_id}</b>{" "}
-              organized by CSI DMCE on{" "}
+              organized by CSI-CATT DMCE on{" "}
               {dayjs(certificateData?.date).format("DD MMMM YYYY")}, at Datta
               Meghe College of Engineering, Airoli.
             </p>
@@ -91,17 +92,13 @@ const VerifyCertificate = () => {
             <p id="desc">
               for achieving the{" "}
               <b>{getPositionText(certificateData?.position)} position</b> at{" "}
-              <b>{certificateData?.event}</b> organized by CSI DMCE on{" "}
+              <b>{certificateData?.event}</b> organized by CSI-CATT DMCE on{" "}
               {dayjs(certificateData?.date).format("DD MMMM YYYY")}, at Datta
               Meghe College of Engineering, Airoli.
             </p>
           )}
           <p id="uid">Certificate ID : {certificateData?.uid}</p>
-          <div
-            id="qr_code_id"
-            className="ms-md-3 mt-4 mt-md-0 p-md-2"
-            ref={qr_code}
-          >
+          <div id="qr_code_id" ref={qr_code}>
             <QRCode
               size={200}
               style={{ height: "auto", maxWidth: "100%", width: "100%" }}
