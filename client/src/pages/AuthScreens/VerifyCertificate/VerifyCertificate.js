@@ -5,10 +5,14 @@ import { StateContext } from "../../../context/StateContext";
 import Certificate from "../../../assets/certificate.png";
 import dayjs from "dayjs";
 import QRCode from "react-qr-code";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
 
 const VerifyCertificate = () => {
   const { uid } = useParams();
   const { toggleLoading } = useContext(StateContext);
+  const navigate = useNavigate();
 
   const [certificateData, setCertificateData] = useState(null);
   const qr_code = useRef(null);
@@ -16,7 +20,13 @@ const VerifyCertificate = () => {
 
   useEffect(() => {
     const controller = new AbortController();
-    AuthCertificate(controller, uid, toggleLoading, setCertificateData);
+    AuthCertificate(
+      controller,
+      uid,
+      toggleLoading,
+      setCertificateData,
+      navigate
+    );
     return () => controller.abort();
   }, [uid]);
 
@@ -36,6 +46,27 @@ const VerifyCertificate = () => {
 
   return (
     <div className="auth-certi">
+      <Button
+        variant="outlined"
+        style={{
+          position: "absolute",
+          top: "20px",
+          left: "20px",
+          borderRadius: "50%",
+          width: "40px",
+          height: "40px",
+          minWidth: "40px",
+          marginRight: "20px",
+          padding: "0",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        onClick={() => navigate(-1)}
+      >
+        <ChevronLeftIcon />
+      </Button>
+
       {certificateData && (
         <div className="certificate">
           <img src={Certificate} alt="" className="img-fluid" />

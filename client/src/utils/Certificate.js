@@ -129,7 +129,8 @@ export const AuthCertificate = async (
   controller,
   uid,
   toggleLoading,
-  setCertificateData
+  setCertificateData,
+  navigate
 ) => {
   toggleLoading(true);
   try {
@@ -140,6 +141,7 @@ export const AuthCertificate = async (
   } catch (err) {
     if (err.name === "CanceledError") return;
     alert(err.response?.data.message || err.message || err);
+    navigate(-1);
   }
   toggleLoading(false);
 };
