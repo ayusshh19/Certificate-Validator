@@ -124,18 +124,21 @@ export const UpdateCertificate = async (
   }
   toggleLoading(false);
 };
+
 export const AuthCertificate = async (
+  controller,
   uid,
   toggleLoading,
   setCertificateData
 ) => {
   toggleLoading(true);
   try {
-    const { data } = await axios.get(`/api/certificate/verify/${uid}`);
-    toggleLoading(false);
+    const { data } = await axios.get(`/api/certificate/verify/${uid}`, {
+      signal: controller.signal,
+    });
     setCertificateData(data.data);
-    return data.data;
   } catch (err) {
+    if (err.name === "CanceledError") return;
     alert(err.response?.data.message || err.message || err);
   }
   toggleLoading(false);

@@ -1,27 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { useParams } from "react-router-dom";
 import { AuthCertificate } from "../../../utils/Certificate";
 import { StateContext } from "../../../context/StateContext";
 import Certificate from "../../../assets/certificate.png";
+import dayjs from "dayjs";
 
 const VerifyCertificate = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const { toggleLoading } = React.useContext(StateContext);
-  const [certificateData, setCertificateData] = useState();
+  const { uid } = useParams();
+  const { toggleLoading } = useContext(StateContext);
+
+  const [certificateData, setCertificateData] = useState(null);
 
   useEffect(() => {
-    AuthCertificate(id, toggleLoading, setCertificateData);
-  }, []);
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    });
-  };
+    const controller = new AbortController();
+    AuthCertificate(controller, uid, toggleLoading, setCertificateData);
+    return () => controller.abort();
+  }, [uid]);
 
   const getPositionText = (position) => {
     if (position === 0) {
@@ -33,7 +27,7 @@ const VerifyCertificate = () => {
     } else if (position === 3) {
       return "3rd";
     } else {
-      return ``;
+      return "";
     }
   };
 
@@ -55,16 +49,17 @@ const VerifyCertificate = () => {
           {certificateData?.position === 0 ? (
             <p id="desc">
               for participation in the <b>{certificateData?.event_id}</b>{" "}
-              organized by CSI DMCE on {formatDate(certificateData?.date)}, at
-              Datta Meghe College of Engineering, Airoli.
+              organized by CSI DMCE on{" "}
+              {dayjs(certificateData?.date).format("DD MMMM YYYY")}, at Datta
+              Meghe College of Engineering, Airoli.
             </p>
           ) : (
             <p id="desc">
               for achieving the{" "}
               <b>{getPositionText(certificateData?.position)} position</b> at{" "}
-              <b>{certificateData?.event_name}</b> organized by CSI DMCE on{" "}
-              {formatDate(certificateData?.date)}, at Datta Meghe College of
-              Engineering, Airoli.
+              <b>{certificateData?.event}</b> organized by CSI DMCE on{" "}
+              {dayjs(certificateData?.date).format("DD MMMM YYYY")}, at Datta
+              Meghe College of Engineering, Airoli.
             </p>
           )}
           <p id="uid">Certificate ID : {certificateData?.uid}</p>

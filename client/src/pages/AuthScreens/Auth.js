@@ -8,7 +8,7 @@ const Auth = () => (
   <Routes>
     <Route index element={<Navigate to="/verify-certificate" />} />
     <Route path="/verify-certificate" element={<VerifyCertificateHome />} />
-    <Route path="/verify-certificate/:id" element={<VerifyCertificate />} />
+    <Route path="/verify-certificate/:uid" element={<VerifyCertificate />} />
     <Route path="/login" element={<Login />} />
     <Route path="*" element={<Navigate to="/login" />} />
   </Routes>
