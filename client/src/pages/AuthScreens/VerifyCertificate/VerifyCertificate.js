@@ -8,6 +8,7 @@ import QRCode from "react-qr-code";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
+import confetti from "canvas-confetti"; // Import canvas-confetti
 
 const VerifyCertificate = () => {
   const { uid } = useParams();
@@ -25,10 +26,37 @@ const VerifyCertificate = () => {
       uid,
       toggleLoading,
       setCertificateData,
-      navigate
+      navigate,
+      startConfetti
     );
-    return () => controller.abort();
+
+    return () => {
+      controller.abort();
+    };
   }, [uid]);
+
+  function startConfetti() {
+    const startTime = Date.now();
+    const duration = 2 * 1000;
+
+    const interval = setInterval(() => {
+      const timePassed = Date.now() - startTime;
+      if (timePassed < duration) {
+        const randomX = Math.random();
+        const randomY = Math.random();
+        confetti({
+          particleCount: 50,
+          origin: { x: randomX, y: randomY },
+        });
+      } else {
+        clearInterval(interval);
+      }
+    }, 250);
+
+    setTimeout(() => {
+      clearInterval(interval);
+    }, duration);
+  }
 
   const getPositionText = (position) => {
     if (position === 0) {
