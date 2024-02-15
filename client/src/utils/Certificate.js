@@ -36,7 +36,7 @@ export const RegisterCertificate = async (
   initialState,
   toggleLoading
 ) => {
-  toggleLoading(true);
+ 
   const { name, position, event } = register;
   if (!name.trim() || !position.trim() || !event.trim()) {
     return setRegister({
@@ -46,6 +46,7 @@ export const RegisterCertificate = async (
       eventError: !event.trim(),
     });
   }
+  toggleLoading(true);
   try {
     await axios.post("/api/certificate/register", {
       ...register,
