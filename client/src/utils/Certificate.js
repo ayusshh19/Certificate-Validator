@@ -36,7 +36,6 @@ export const RegisterCertificate = async (
   initialState,
   toggleLoading
 ) => {
- 
   const { name, position, event } = register;
   if (!name.trim() || !position.trim() || !event.trim()) {
     return setRegister({
@@ -76,37 +75,15 @@ export const DeleteCertificate = async (
   toggleLoading(false);
 };
 
-export const fetchCertificates = async (
-  event_id,
-  controller,
-  setCertificates,
-  setEvent,
-  toggleLoading,
-  removeToken
-) => {
+export const fetchCertificates = async (event_id, controller) => {
   const token = localStorage.getItem("accessToken");
-  toggleLoading(true);
-  try {
-    const { data } = await axios.get(
-      `/api/certificate/fetch/event/${event_id}`,
-      {
-        signal: controller.signal,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    setCertificates(data.data.certificates || []);
-    setEvent(data.data.event || "");
-  } catch (err) {
-    if (err.name === "CanceledError") return;
-    if (err.response?.data.name === "Unauthorized") {
-      toggleLoading(false);
-      return removeToken();
-    }
-    alert(err.response?.data.message || err.message || err);
-  }
-  toggleLoading(false);
+  const { data } = await axios.get(`/api/certificate/fetch/event/${event_id}`, {
+    signal: controller.signal,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return data;
 };
 
 export const UpdateCertificate = async (

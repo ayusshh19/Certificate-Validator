@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from "react";
+import React, { useState, createContext, useEffect, useContext } from "react";
 import { fetchEvents } from "../utils/Event";
 import axios from "axios";
 
@@ -86,5 +86,7 @@ const StateProvider = ({ children }) => {
     </StateContext.Provider>
   );
 };
+
+export const useStateContext = () => useContext(StateContext);
 
 export default StateProvider;

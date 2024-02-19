@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
@@ -11,7 +11,6 @@ import QrCode2Icon from "@mui/icons-material/QrCode2";
 import QRCode from "react-qr-code";
 import {
   DeleteCertificate,
-  fetchCertificates,
   UpdateCertificate,
 } from "../../../utils/Certificate";
 import dayjs from "dayjs";
@@ -23,6 +22,9 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
+import useCertificates from "../../../hooks/Certificate";
+import Typography from "@mui/material/Typography";
+import Skeleton from "@mui/material/Skeleton";
 
 const style = {
   position: "absolute",
@@ -123,11 +125,10 @@ const htmlToImageConvert = (qr_code, certificate) => {
 const CertificatesList = () => {
   const { event_id } = useParams();
 
-  const { toggleLoading, positionOption, removeToken } =
-    useContext(StateContext);
+  const { toggleLoading, positionOption } = useContext(StateContext);
 
-  const [certificates, setCertificates] = useState([]);
-  const [event, setEvent] = useState("");
+  const { certificates, setCertificates, event, loading } =
+    useCertificates(event_id);
   const [editModal, setEditModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [certificate, setCertificate] = useState(null);
@@ -153,19 +154,6 @@ const CertificatesList = () => {
     }
   };
 
-  useEffect(() => {
-    const controller = new AbortController();
-    fetchCertificates(
-      event_id,
-      controller,
-      setCertificates,
-      setEvent,
-      toggleLoading,
-      removeToken
-    );
-    return () => controller.abort();
-  }, [event_id]);
-
   return (
     <div>
       <div className="d-flex align-items-center">
@@ -187,7 +175,17 @@ const CertificatesList = () => {
             <ChevronLeftIcon />
           </Button>
         </NavLink>
-        <h2>{event}</h2>
+        <Typography variant="h4">
+          {loading ? (
+            <Skeleton
+              style={{
+                width: "200px",
+              }}
+            />
+          ) : (
+            event
+          )}
+        </Typography>
       </div>
 
       <div className="container-fluid mt-4">
@@ -207,6 +205,7 @@ const CertificatesList = () => {
               noRowsLabel: "No certificates generated yet!",
             }}
             pageSizeOptions={[10, 20]}
+            loading={loading}
             onCellClick={(params) => {
               if (params.field === "qrCode") {
                 setCertificate({
