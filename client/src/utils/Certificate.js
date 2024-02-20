@@ -1,33 +1,14 @@
 import axios from "axios";
 import dayjs from "dayjs";
 
-export const RegisterCertificate = async (
-  register,
-  setRegister,
-  initialState,
-  toggleLoading
-) => {
-  const { name, position, event } = register;
-  if (!name.trim() || !position.trim() || !event.trim()) {
-    return setRegister({
-      ...register,
-      nameError: !name.trim(),
-      positionError: !position.trim(),
-      eventError: !event.trim(),
-    });
-  }
-  toggleLoading(true);
-  try {
-    await axios.post("/api/certificate/register", {
-      ...register,
-      date: dayjs(register.date).format("YYYY-MM-DD"),
-      event_id: register.event,
-    });
-    setRegister(initialState);
-  } catch (err) {
-    alert(err.response?.data.message || err.message || err);
-  }
-  toggleLoading(false);
+export const RegisterCertificate = async (register) => {
+  const { data } = await axios.post("/api/certificate/register", {
+    ...register,
+    date: dayjs(register.date).format("YYYY-MM-DD"),
+    event_id: register.event,
+  });
+
+  return data;
 };
 
 export const DeleteCertificate = async (certificate_id) => {

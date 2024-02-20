@@ -202,14 +202,25 @@ const GenerateCertificate = () => {
         <Button
           variant="contained"
           style={{ borderRadius: "12px", padding: "10px 50px" }}
-          onClick={() =>
-            RegisterCertificate(
-              register,
-              setRegister,
-              initialState,
-              toggleLoading
-            )
-          }
+          onClick={async () => {
+            const { name, position, event } = register;
+            if (!name.trim() || !position.trim() || !event.trim()) {
+              return setRegister({
+                ...register,
+                nameError: !name.trim(),
+                positionError: !position.trim(),
+                eventError: !event.trim(),
+              });
+            }
+            toggleLoading(true);
+            try {
+              await RegisterCertificate(register);
+              setRegister(initialState);
+            } catch (err) {
+              alert(err.response?.data.message || err.message || err);
+            }
+            toggleLoading(false);
+          }}
         >
           Generate Certificate
         </Button>
