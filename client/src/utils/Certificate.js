@@ -1,25 +1,6 @@
 import axios from "axios";
 import dayjs from "dayjs";
 
-const editCertificate = async (
-  certificates,
-  setCertificates,
-  newCertificate
-) => {
-  setCertificates(
-    certificates.map((certificate) => {
-      if (certificate._id === newCertificate.id) {
-        return {
-          ...certificate,
-          name: newCertificate.name,
-          position: newCertificate.position,
-        };
-      }
-      return certificate;
-    })
-  );
-};
-
 export const RegisterCertificate = async (
   register,
   setRegister,
@@ -67,25 +48,15 @@ export const fetchCertificates = async (event_id, controller) => {
   return data;
 };
 
-export const UpdateCertificate = async (
-  certificates,
-  setCertificates,
-  newCertificate,
-  setEditModal,
-  toggleLoading
-) => {
-  toggleLoading(true);
-  try {
-    await axios.put(`/api/certificate/update/${newCertificate.id}`, {
+export const UpdateCertificate = async (newCertificate) => {
+  const { data } = await axios.put(
+    `/api/certificate/update/${newCertificate.id}`,
+    {
       name: newCertificate.name,
       position: newCertificate.position,
-    });
-    editCertificate(certificates, setCertificates, newCertificate);
-    setEditModal(false);
-  } catch (err) {
-    alert(err.response?.data.message || err.message || err);
-  }
-  toggleLoading(false);
+    }
+  );
+  return data;
 };
 
 export const AuthCertificate = async (

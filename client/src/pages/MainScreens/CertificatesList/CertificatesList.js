@@ -21,7 +21,6 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Skeleton from "@mui/material/Skeleton";
 import useCertificates from "../../../hooks/Certificate";
-import { UpdateCertificate } from "../../../utils/Certificate";
 
 const style = {
   position: "absolute",
@@ -121,16 +120,15 @@ const htmlToImageConvert = (qr_code, certificate) => {
 
 const CertificatesList = () => {
   const { event_id } = useParams();
-
-  const { toggleLoading, positionOption } = useContext(StateContext);
-
+  const { positionOption } = useContext(StateContext);
   const {
     certificates,
-    setCertificates,
     event,
     loading,
     DeleteOneCertificate,
+    UpdateOneCertificate,
   } = useCertificates(event_id);
+
   const [editModal, setEditModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [certificate, setCertificate] = useState(null);
@@ -366,13 +364,7 @@ const CertificatesList = () => {
                 width: "100%",
               }}
               onClick={() =>
-                UpdateCertificate(
-                  certificates,
-                  setCertificates,
-                  editCertificate,
-                  setEditModal,
-                  toggleLoading
-                )
+                UpdateOneCertificate(editCertificate, setEditModal)
               }
             >
               Update

@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { useStateContext } from "../context/StateContext";
-import { fetchCertificates, DeleteCertificate } from "../utils/Certificate";
+import {
+  fetchCertificates,
+  DeleteCertificate,
+  UpdateCertificate,
+} from "../utils/Certificate";
 
 function useCertificates(event_id) {
   const [certificates, setCertificates] = useState([]);
@@ -46,12 +50,36 @@ function useCertificates(event_id) {
     }
   };
 
+  const UpdateOneCertificate = async (newCertificate, setEditModal) => {
+    setLoading(true);
+    setEditModal(false);
+    try {
+      await UpdateCertificate(newCertificate);
+      setCertificates(
+        certificates.map((certificate) => {
+          if (certificate._id === newCertificate.id) {
+            return {
+              ...certificate,
+              name: newCertificate.name,
+              position: newCertificate.position,
+            };
+          }
+          return certificate;
+        })
+      );
+    } catch (err) {
+      setRefresh((prev) => !prev);
+      alert(err.response?.data.message || err.message || err);
+    }
+    setLoading(false);
+  };
+
   return {
     certificates,
-    setCertificates,
     event,
     loading,
     DeleteOneCertificate,
+    UpdateOneCertificate,
   };
 }
 
