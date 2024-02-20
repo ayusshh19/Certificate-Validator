@@ -40,28 +40,10 @@ export const UpdateCertificate = async (newCertificate) => {
   return data;
 };
 
-export const AuthCertificate = async (
-  controller,
-  uid,
-  toggleLoading,
-  setCertificateData,
-  navigate,
-  startConfetti
-) => {
-  toggleLoading(true);
-  try {
-    const { data } = await axios.get(`/api/certificate/verify/${uid}`, {
-      signal: controller.signal,
-    });
-    setCertificateData(data.data);
-    data.data?.position !== 0 &&
-      setTimeout(() => {
-        startConfetti();
-      }, 500);
-  } catch (err) {
-    if (err.name === "CanceledError") return;
-    alert(err.response?.data.message || err.message || err);
-    navigate(-1);
-  }
-  toggleLoading(false);
+export const AuthCertificate = async (controller, uid) => {
+  const { data } = await axios.get(`/api/certificate/verify/${uid}`, {
+    signal: controller.signal,
+  });
+
+  return data;
 };

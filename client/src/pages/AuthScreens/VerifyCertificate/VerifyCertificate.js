@@ -44,14 +44,22 @@ const VerifyCertificate = () => {
 
   useEffect(() => {
     const controller = new AbortController();
-    AuthCertificate(
-      controller,
-      uid,
-      toggleLoading,
-      setCertificateData,
-      navigate,
-      startConfetti
-    );
+    (async () => {
+      toggleLoading(true);
+      try {
+        const data = await AuthCertificate(controller, uid);
+        setCertificateData(data.data);
+        data.data?.position !== 0 &&
+          setTimeout(() => {
+            startConfetti();
+          }, 500);
+      } catch (err) {
+        if (err.name === "CanceledError") return;
+        alert(err.response?.data.message || err.message || err);
+        navigate(-1);
+      }
+      toggleLoading(false);
+    })();
 
     return () => {
       controller.abort();
