@@ -4,15 +4,11 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { NavLink } from "react-router-dom";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import QrCode2Icon from "@mui/icons-material/QrCode2";
 import QRCode from "react-qr-code";
-import {
-  DeleteCertificate,
-  UpdateCertificate,
-} from "../../../utils/Certificate";
 import dayjs from "dayjs";
 import { toPng } from "html-to-image";
 import EditIcon from "@mui/icons-material/Edit";
@@ -22,9 +18,10 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
-import useCertificates from "../../../hooks/Certificate";
 import Typography from "@mui/material/Typography";
 import Skeleton from "@mui/material/Skeleton";
+import useCertificates from "../../../hooks/Certificate";
+import { UpdateCertificate } from "../../../utils/Certificate";
 
 const style = {
   position: "absolute",
@@ -127,8 +124,13 @@ const CertificatesList = () => {
 
   const { toggleLoading, positionOption } = useContext(StateContext);
 
-  const { certificates, setCertificates, event, loading } =
-    useCertificates(event_id);
+  const {
+    certificates,
+    setCertificates,
+    event,
+    loading,
+    DeleteOneCertificate,
+  } = useCertificates(event_id);
   const [editModal, setEditModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [certificate, setCertificate] = useState(null);
@@ -153,6 +155,8 @@ const CertificatesList = () => {
       });
     }
   };
+
+  const apiRef = useGridApiRef();
 
   return (
     <div>
@@ -191,6 +195,7 @@ const CertificatesList = () => {
       <div className="container-fluid mt-4">
         <div style={{ height: "80vh", width: "100%" }}>
           <DataGrid
+            apiRef={apiRef}
             style={{
               borderRadius: "18px",
             }}
@@ -231,12 +236,7 @@ const CertificatesList = () => {
                     "Are you sure you want to delete this certificate?"
                   );
                   if (confirmed) {
-                    await DeleteCertificate(
-                      params.row.id,
-                      certificates,
-                      setCertificates,
-                      toggleLoading
-                    );
+                    await DeleteOneCertificate(params.row.id, apiRef);
                   }
                 })();
               }

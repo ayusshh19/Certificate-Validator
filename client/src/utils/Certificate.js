@@ -1,16 +1,6 @@
 import axios from "axios";
 import dayjs from "dayjs";
 
-const removeCertificate = async (
-  certificates,
-  setCertificates,
-  certificate_id
-) => {
-  setCertificates(
-    certificates.filter((certificate) => certificate._id !== certificate_id)
-  );
-};
-
 const editCertificate = async (
   certificates,
   setCertificates,
@@ -59,20 +49,11 @@ export const RegisterCertificate = async (
   toggleLoading(false);
 };
 
-export const DeleteCertificate = async (
-  certificate_id,
-  certificates,
-  setCertificates,
-  toggleLoading
-) => {
-  toggleLoading(true);
-  try {
-    await axios.delete(`/api/certificate/delete/${certificate_id}`);
-    removeCertificate(certificates, setCertificates, certificate_id);
-  } catch (err) {
-    alert(err.response?.data.message || err.message || err);
-  }
-  toggleLoading(false);
+export const DeleteCertificate = async (certificate_id) => {
+  const { data } = await axios.delete(
+    `/api/certificate/delete/${certificate_id}`
+  );
+  return data;
 };
 
 export const fetchCertificates = async (event_id, controller) => {
