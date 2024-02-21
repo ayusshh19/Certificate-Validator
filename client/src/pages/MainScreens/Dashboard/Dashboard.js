@@ -21,7 +21,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MenuIcon from "@mui/icons-material/Menu";
 import IconButton from "@mui/material/IconButton";
-import { RegisterEvent, DeleteEvent, updateEvent } from "../../../utils/Event";
+import { RegisterEvent, updateEvent } from "../../../utils/Event";
 
 import "./Dashboard.css";
 
@@ -50,7 +50,7 @@ const generateYearOptions = () => {
 };
 
 const Dashboard = () => {
-  const { events, setEvents, refreshFlag, toggleMobileNav, toggleLoading } =
+  const { events, refreshFlag, toggleMobileNav, DeleteOneEvent } =
     useContext(StateContext);
 
   const [open, setOpen] = useState(false);
@@ -201,33 +201,9 @@ const Dashboard = () => {
                               </button>
                               <button
                                 className="d-flex align-items-center justify-content-center"
-                                onClick={async (e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  if (
-                                    !window.confirm(
-                                      "Are you sure you want to delete this event?"
-                                    )
-                                  )
-                                    return;
-                                  toggleLoading(true);
-                                  try {
-                                    await DeleteEvent(
-                                      events,
-                                      setEvents,
-                                      event.year,
-                                      event._id,
-                                      toggleLoading
-                                    );
-                                  } catch (err) {
-                                    alert(
-                                      err.response?.data.message ||
-                                        err.message ||
-                                        err
-                                    );
-                                  }
-                                  toggleLoading(false);
-                                }}
+                                onClick={(e) =>
+                                  DeleteOneEvent(e, event.year, event._id)
+                                }
                               >
                                 Delete{" "}
                                 <DeleteIcon

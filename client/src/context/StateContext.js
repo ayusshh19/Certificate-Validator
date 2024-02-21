@@ -1,6 +1,7 @@
 import React, { useState, createContext, useEffect, useContext } from "react";
 import { fetchEvents } from "../utils/Event";
 import axios from "axios";
+import useEvents from "../hooks/Event";
 
 export const StateContext = createContext();
 
@@ -10,7 +11,6 @@ const StateProvider = ({ children }) => {
   );
   const [loading, setLoading] = useState(false);
   const [alerts, setAlerts] = useState([]);
-  const [events, setEvents] = useState([]);
   const [fetchFlag, setFetchFlag] = useState(true);
   const [mobileNav, setMobileNav] = useState(false);
 
@@ -41,11 +41,12 @@ const StateProvider = ({ children }) => {
     }
   }, [isLogin]);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    fetchEvents(controller, setEvents, toggleLoading, removeToken);
-    return () => controller.abort();
-  }, [isLogin, fetchFlag]);
+  const { events, setEvents, DeleteOneEvent } = useEvents(
+    isLogin,
+    fetchFlag,
+    removeToken,
+    toggleLoading
+  );
 
   const refreshFlag = () => {
     setFetchFlag((prev) => !prev);
@@ -80,6 +81,7 @@ const StateProvider = ({ children }) => {
         mobileNav,
         toggleLoading,
         positionOption,
+        DeleteOneEvent,
       }}
     >
       {children}
