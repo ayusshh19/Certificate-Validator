@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -11,7 +11,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
-import { StateContext } from "../../../context/StateContext";
+import { useStateContext } from "../../../context/StateContext";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { RegisterCertificate } from "../../../utils/Certificate";
@@ -35,7 +35,7 @@ const initialState = {
 
 const GenerateCertificate = () => {
   const { events, positionOption, toggleMobileNav, toggleLoading } =
-    useContext(StateContext);
+    useStateContext();
 
   const [register, setRegister] = useState(initialState);
 

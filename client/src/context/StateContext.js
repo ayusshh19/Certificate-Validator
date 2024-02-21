@@ -2,7 +2,7 @@ import React, { useState, createContext, useEffect, useContext } from "react";
 import axios from "axios";
 import useEvents from "../hooks/Event";
 
-export const StateContext = createContext();
+const StateContext = createContext();
 
 const StateProvider = ({ children }) => {
   const [isLogin, setIsLogin] = useState(

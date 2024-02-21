@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
@@ -12,7 +12,7 @@ import QRCode from "react-qr-code";
 import dayjs from "dayjs";
 import { toPng } from "html-to-image";
 import EditIcon from "@mui/icons-material/Edit";
-import { StateContext } from "../../../context/StateContext";
+import { useStateContext } from "../../../context/StateContext";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -120,7 +120,7 @@ const htmlToImageConvert = (qr_code, certificate) => {
 
 const CertificatesList = () => {
   const { event_id } = useParams();
-  const { positionOption } = useContext(StateContext);
+  const { positionOption } = useStateContext();
   const {
     certificates,
     event,

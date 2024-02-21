@@ -2,11 +2,10 @@ import "./App.css";
 import MainScreen from "./pages/MainScreens/MainScreen";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Auth from "./pages/AuthScreens/Auth";
-import { useContext } from "react";
-import { StateContext } from "./context/StateContext";
+import { useStateContext } from "./context/StateContext";
 
 function App() {
-  const { loading, isLogin } = useContext(StateContext);
+  const { loading, isLogin } = useStateContext();
 
   return (
     <div className="App">

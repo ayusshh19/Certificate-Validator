@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -16,7 +16,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { StateContext } from "../../../context/StateContext";
+import { useStateContext } from "../../../context/StateContext";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -51,7 +51,7 @@ const generateYearOptions = () => {
 
 const Dashboard = () => {
   const { events, refreshFlag, toggleMobileNav, DeleteOneEvent } =
-    useContext(StateContext);
+    useStateContext();
 
   const [open, setOpen] = useState(false);
   const [register, setRegister] = useState(initialState);

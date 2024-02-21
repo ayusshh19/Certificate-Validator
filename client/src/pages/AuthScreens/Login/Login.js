@@ -1,8 +1,8 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { StateContext } from "../../../context/StateContext";
+import { useStateContext } from "../../../context/StateContext";
 import { Login as LoginFunction } from "../../../utils/Index";
 import "./Login.css";
 
@@ -14,7 +14,7 @@ const initialState = {
 };
 
 const Login = () => {
-  const { setToken, toggleLoading } = useContext(StateContext);
+  const { setToken, toggleLoading } = useStateContext();
 
   const [login, setLogin] = useState(initialState);
 
@@ -38,7 +38,6 @@ const Login = () => {
               <div className="d-flex align-items-end">
                 <TextField
                   style={{ width: "100%" }}
-                  id="standard-basic"
                   label="Username"
                   variant="standard"
                   value={login.username}
@@ -55,13 +54,13 @@ const Login = () => {
                 <TextField
                   type="password"
                   style={{ width: "100%" }}
-                  id="standard-basic"
                   label="Password"
                   variant="standard"
                   value={login.password}
                   onChange={(e) =>
                     handleInputChange("password", e.target.value)
                   }
+                  autoComplete="false"
                   error={login.passwordError}
                   helperText={
                     login.passwordError ? "Password cannot be empty" : ""
@@ -80,15 +79,25 @@ const Login = () => {
               padding: "10px 50px",
               width: "100%",
             }}
-            onClick={() =>
-              LoginFunction(
-                login,
-                setLogin,
-                toggleLoading,
-                setToken,
-                initialState
-              )
-            }
+            onClick={async () => {
+              const { username, password } = login;
+              if (!username.trim() || !password.trim()) {
+                return setLogin({
+                  ...login,
+                  usernameError: !username.trim(),
+                  passwordError: !password.trim(),
+                });
+              }
+              toggleLoading(true);
+              try {
+                const token = await LoginFunction(login);
+                setToken(token);
+                setLogin(initialState);
+              } catch (err) {
+                alert(err.response?.data.message || err.message || err);
+              }
+              toggleLoading(false);
+            }}
           >
             Login
           </Button>

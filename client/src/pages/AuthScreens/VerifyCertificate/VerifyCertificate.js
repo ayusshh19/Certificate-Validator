@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { AuthCertificate } from "../../../utils/Certificate";
-import { StateContext } from "../../../context/StateContext";
+import { useStateContext } from "../../../context/StateContext";
 import Certificate from "../../../assets/certificate.png";
 import dayjs from "dayjs";
 import QRCode from "react-qr-code";
@@ -13,7 +13,7 @@ import Button from "@mui/material/Button";
 
 const VerifyCertificate = () => {
   const { uid } = useParams();
-  const { toggleLoading } = useContext(StateContext);
+  const { toggleLoading } = useStateContext();
   const navigate = useNavigate();
 
   const [certificateData, setCertificateData] = useState(null);
