@@ -1,5 +1,4 @@
 import React, { useState, createContext, useEffect, useContext } from "react";
-import { fetchEvents } from "../utils/Event";
 import axios from "axios";
 import useEvents from "../hooks/Event";
 
@@ -10,7 +9,6 @@ const StateProvider = ({ children }) => {
     localStorage.getItem("accessToken") ? true : false
   );
   const [loading, setLoading] = useState(false);
-  const [alerts, setAlerts] = useState([]);
   const [fetchFlag, setFetchFlag] = useState(true);
   const [mobileNav, setMobileNav] = useState(false);
 
@@ -32,16 +30,14 @@ const StateProvider = ({ children }) => {
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
       axios.defaults.headers.common["Authorization"] = "Bearer " + accessToken;
-      localStorage.setItem("accessToken", accessToken);
-      setIsLogin(true);
+      setToken(accessToken);
     } else {
       delete axios.defaults.headers.common["Authorization"];
-      localStorage.removeItem("accessToken");
-      setIsLogin(false);
+      removeToken();
     }
   }, [isLogin]);
 
-  const { events, setEvents, DeleteOneEvent } = useEvents(
+  const { events, DeleteOneEvent } = useEvents(
     isLogin,
     fetchFlag,
     removeToken,
@@ -67,15 +63,10 @@ const StateProvider = ({ children }) => {
     <StateContext.Provider
       value={{
         isLogin,
-        setIsLogin,
         loading,
-        setLoading,
-        alerts,
-        setAlerts,
         setToken,
         removeToken,
         events,
-        setEvents,
         refreshFlag,
         toggleMobileNav,
         mobileNav,

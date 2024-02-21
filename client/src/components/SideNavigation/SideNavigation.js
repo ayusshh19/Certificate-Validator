@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import "./SideNavigation.css";
 import FolderIcon from "@mui/icons-material/Folder";
 import NoteAddIcon from "@mui/icons-material/NoteAdd";
-import { Logout } from "../../utils/Index";
+import { useStateContext } from "../../context/StateContext";
 
 const SideNavigation = () => {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+
+  const { removeToken } = useStateContext();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -44,7 +46,7 @@ const SideNavigation = () => {
       </div>
 
       <div className="logout">
-        <button onClick={Logout}>Logout</button>
+        <button onClick={removeToken}>Logout</button>
       </div>
     </div>
   );

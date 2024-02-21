@@ -3,8 +3,6 @@ import { fetchEvents, DeleteEvent } from "../utils/Event";
 
 function useEvents(isLogin, fetchFlag, removeToken, toggleLoading) {
   const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -56,8 +54,6 @@ function useEvents(isLogin, fetchFlag, removeToken, toggleLoading) {
 
   return {
     events,
-    loading,
-    refresh,
     DeleteOneEvent,
   };
 }

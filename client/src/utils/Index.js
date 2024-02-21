@@ -30,9 +30,4 @@ const Login = async (
   toggleLoading(false);
 };
 
-const Logout = () => {
-  localStorage.removeItem("accessToken");
-  window.location.href = "/login";
-};
-
-export { Login, Logout };
+export { Login };

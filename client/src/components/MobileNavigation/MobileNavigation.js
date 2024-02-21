@@ -1,19 +1,18 @@
-import React, { useContext } from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import "./MobileNavigation.css";
 import FolderIcon from "@mui/icons-material/Folder";
 import NoteAddIcon from "@mui/icons-material/NoteAdd";
-import { StateContext } from "../../context/StateContext";
 import CloseIcon from "@mui/icons-material/Close";
 import { IconButton } from "@mui/material";
-import { Logout } from "../../utils/Index";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { useStateContext } from "../../context/StateContext";
 
 const SideNavigation = () => {
-  const [value, setValue] = React.useState(0);
-  const { mobileNav, toggleMobileNav } = useContext(StateContext);
+  const [value, setValue] = useState(0);
+  const { mobileNav, toggleMobileNav, removeToken } = useStateContext();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -36,7 +35,7 @@ const SideNavigation = () => {
             style={{
               transform: "rotate(180deg)",
             }}
-            onClick={Logout}
+            onClick={removeToken}
           >
             <LogoutIcon style={{ color: "#fff" }} />
           </IconButton>
