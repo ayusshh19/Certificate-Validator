@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const removeEvent = async (events, setEvents, year, event_id) => {
+const removeEvent = (events, setEvents, year, event_id) => {
   setEvents(
     events.filter((years) => {
       if (years.year === year) {
@@ -14,59 +14,15 @@ const removeEvent = async (events, setEvents, year, event_id) => {
   );
 };
 
-const editEvent = async (events, setEvents, year, event_id, name) => {
-  setEvents(
-    events.map((years) => {
-      if (years.year === year) {
-        years.events = years.events.map((event) => {
-          if (event._id === event_id) {
-            event.name = name;
-          }
-          return event;
-        });
-      }
-      return years;
-    })
-  );
+export const RegisterEvent = async (register) => {
+  const { data } = await axios.post("/api/event/register", register);
+  return data;
 };
 
-export const RegisterEvent = async (
-  register,
-  setRegister,
-  refreshFlag,
-  handleClose
-) => {
-  if (!register.name.trim()) {
-    return setRegister({ ...register, nameError: true });
-  }
-  try {
-    await axios.post("/api/event/register", register);
-    refreshFlag();
-    handleClose();
-  } catch (err) {
-    alert(err.response?.data.message || err.message || err);
-  }
-};
-
-export const DeleteEvent = async (
-  e,
-  events,
-  setEvents,
-  year,
-  event_id,
-  toggleLoading
-) => {
-  e.preventDefault();
-  e.stopPropagation();
-  if (!window.confirm("Are you sure you want to delete this event?")) return;
-  toggleLoading(true);
-  try {
-    await axios.delete(`/api/event/delete/${event_id}`);
-    removeEvent(events, setEvents, year, event_id);
-  } catch (err) {
-    alert(err.response?.data.message || err.message || err);
-  }
-  toggleLoading(false);
+export const DeleteEvent = async (events, setEvents, year, event_id) => {
+  const { data } = await axios.delete(`/api/event/delete/${event_id}`);
+  removeEvent(events, setEvents, year, event_id);
+  return data;
 };
 
 export const fetchEvents = async (
@@ -92,27 +48,11 @@ export const fetchEvents = async (
   toggleLoading(false);
 };
 
-export const updateEvent = async (
-  selectedEditEvent,
-  register,
-  setRegister,
-  events,
-  setEvents,
-  refreshFlag,
-  setEditModal
-) => {
+export const updateEvent = async (selectedEditEvent) => {
   const name = selectedEditEvent.name;
   const year = selectedEditEvent.year;
   const id = selectedEditEvent.id;
-  if (!name.trim()) {
-    return setRegister({ ...register, nameError: true });
-  }
-  try {
-    await axios.put(`/api/event/update/${id}`, { name, year });
-    // editEvent(events, setEvents, year, id, name);
-    refreshFlag();
-    setEditModal(false);
-  } catch (err) {
-    alert(err.response?.data.message || err.message || err);
-  }
+
+  const { data } = await axios.put(`/api/event/update/${id}`, { name, year });
+  return data;
 };

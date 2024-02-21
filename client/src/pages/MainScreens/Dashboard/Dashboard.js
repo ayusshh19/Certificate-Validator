@@ -201,16 +201,33 @@ const Dashboard = () => {
                               </button>
                               <button
                                 className="d-flex align-items-center justify-content-center"
-                                onClick={(e) =>
-                                  DeleteEvent(
-                                    e,
-                                    events,
-                                    setEvents,
-                                    event.year,
-                                    event._id,
-                                    toggleLoading
+                                onClick={async (e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  if (
+                                    !window.confirm(
+                                      "Are you sure you want to delete this event?"
+                                    )
                                   )
-                                }
+                                    return;
+                                  toggleLoading(true);
+                                  try {
+                                    await DeleteEvent(
+                                      events,
+                                      setEvents,
+                                      event.year,
+                                      event._id,
+                                      toggleLoading
+                                    );
+                                  } catch (err) {
+                                    alert(
+                                      err.response?.data.message ||
+                                        err.message ||
+                                        err
+                                    );
+                                  }
+                                  toggleLoading(false);
+                                }}
                               >
                                 Delete{" "}
                                 <DeleteIcon
@@ -292,9 +309,18 @@ const Dashboard = () => {
             disableElevation
             variant="contained"
             style={{ borderRadius: "10px", textTransform: "capitalize" }}
-            onClick={() =>
-              RegisterEvent(register, setRegister, refreshFlag, handleClose)
-            }
+            onClick={async () => {
+              if (!register.name.trim()) {
+                return setRegister({ ...register, nameError: true });
+              }
+              try {
+                await RegisterEvent(register);
+                refreshFlag();
+                handleClose();
+              } catch (err) {
+                alert(err.response?.data.message || err.message || err);
+              }
+            }}
           >
             Add
           </Button>
@@ -358,17 +384,18 @@ const Dashboard = () => {
             disableElevation
             variant="contained"
             style={{ borderRadius: "10px", textTransform: "capitalize" }}
-            onClick={() =>
-              updateEvent(
-                selectedEditEvent,
-                register,
-                setRegister,
-                events,
-                setEvents,
-                refreshFlag,
-                setEditModal
-              )
-            }
+            onClick={async () => {
+              if (!selectedEditEvent.name.trim()) {
+                return setRegister({ ...register, nameError: true });
+              }
+              try {
+                await updateEvent(selectedEditEvent);
+                refreshFlag();
+                setEditModal(false);
+              } catch (err) {
+                alert(err.response?.data.message || err.message || err);
+              }
+            }}
           >
             Update
           </Button>
