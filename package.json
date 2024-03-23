@@ -8,6 +8,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
+  "homepage": "https://csi.dmce.ac.in/verify-certificate/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/CSI-CATT-DMCE/Certificate-Validator.git"
