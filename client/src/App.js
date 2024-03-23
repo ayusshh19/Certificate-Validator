@@ -14,7 +14,7 @@ function App() {
           <div className="loader"></div>
         </div>
       )}
-      <Router basename="/verify-certificate">
+      <Router>
         <Routes>
           {isLogin ? (
             <Route path="/*" element={<MainScreen />} />
