@@ -36,7 +36,7 @@
       "react-app/jest"
     ]
   },
-  "homepage": "/Certificate-Validator",
+  "homepage": "https://csi.dmce.ac.in/verify-certificate/",
   "browserslist": {
     "production": [
       ">0.2%",
